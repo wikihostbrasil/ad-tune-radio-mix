@@ -9,6 +9,7 @@ import { PromotionsManager } from "@/components/PromotionsManager";
 import { PlaylistsManager } from "@/components/PlaylistsManager";
 import { ScheduleManager } from "@/components/ScheduleManager";
 import { Header } from "@/components/Header";
+import { Player } from "@/components/Player";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("playlists");
@@ -51,10 +52,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 pb-24">
       <Header />
       
-      <div className="container mx-auto p-4 lg:p-6 pt-20">
+      <div className="container mx-auto p-4 lg:p-6 pt-24">
         {/* Navigation Tabs */}
         <div className="flex flex-wrap gap-2 mb-6 p-1 bg-card/50 rounded-lg border border-border/40">
           {tabs.map((tab) => {
@@ -84,6 +85,8 @@ const Index = () => {
           {renderContent()}
         </div>
       </div>
+
+      <Player />
     </div>
   );
 };
