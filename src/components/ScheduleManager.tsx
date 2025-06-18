@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,10 +18,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+type AdType = 'vinheta' | 'anuncio' | 'promocao';
+
 interface ScheduledAd {
   id: number;
   name: string;
-  type: 'vinheta' | 'anuncio' | 'promocao';
+  type: AdType;
   startDate: string;
   endDate: string;
   hour: string;
@@ -42,9 +43,9 @@ const weekDays = [
 ];
 
 const adTypes = [
-  { value: 'vinheta', label: 'Vinheta' },
-  { value: 'anuncio', label: 'Anúncio' },
-  { value: 'promocao', label: 'Promoção' },
+  { value: 'vinheta' as const, label: 'Vinheta' },
+  { value: 'anuncio' as const, label: 'Anúncio' },
+  { value: 'promocao' as const, label: 'Promoção' },
 ];
 
 export const ScheduleManager = () => {
@@ -77,7 +78,7 @@ export const ScheduleManager = () => {
   const [editingAd, setEditingAd] = useState<ScheduledAd | null>(null);
   const [formData, setFormData] = useState({
     name: "",
-    type: "",
+    type: "" as AdType | "",
     startDate: "",
     endDate: "",
     hour: "00",
@@ -116,17 +117,25 @@ export const ScheduleManager = () => {
   };
 
   const handleSave = () => {
+    if (!formData.type) return; // Prevent saving without type selection
+    
     if (editingAd) {
       setScheduledAds(prev => prev.map(ad => 
         ad.id === editingAd.id 
-          ? { ...ad, ...formData }
+          ? { ...ad, ...formData, type: formData.type as AdType }
           : ad
       ));
     } else {
       const newAd: ScheduledAd = {
         id: Date.now(),
-        ...formData,
-        type: formData.type as 'vinheta' | 'anuncio' | 'promocao',
+        name: formData.name,
+        type: formData.type as AdType,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        hour: formData.hour,
+        minute: formData.minute,
+        weekDays: formData.weekDays,
+        isActive: formData.isActive,
       };
       setScheduledAds(prev => [...prev, newAd]);
     }
@@ -206,7 +215,7 @@ export const ScheduleManager = () => {
                     </div>
                     <div>
                       <Label htmlFor="type">Tipo de Conteúdo</Label>
-                      <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
+                      <Select value={formData.type} onValueChange={(value: AdType) => setFormData(prev => ({ ...prev, type: value }))}>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione o tipo" />
                         </SelectTrigger>
@@ -309,7 +318,7 @@ export const ScheduleManager = () => {
                   <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Cancelar
                   </Button>
-                  <Button onClick={handleSave}>
+                  <Button onClick={handleSave} disabled={!formData.type}>
                     {editingAd ? 'Salvar' : 'Criar'} Agendamento
                   </Button>
                 </DialogFooter>
