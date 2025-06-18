@@ -55,7 +55,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 pb-24">
       <Header />
       
-      <div className="container mx-auto p-4 lg:p-6 pt-24">
+      <div className="container mx-auto p-4 lg:p-6 pt-28">
         {/* Navigation Tabs */}
         <div className="flex flex-wrap gap-2 mb-6 p-1 bg-card/50 rounded-lg border border-border/40">
           {tabs.map((tab) => {

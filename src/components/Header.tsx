@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { RadioIcon, User, Settings, Lock, LogOut, Sun, Moon } from "lucide-react";
+import { RadioIcon, User, Settings, Lock, LogOut, Sun, Moon, Code } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -12,19 +12,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Initialize theme based on current state
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
     } else {
       document.documentElement.classList.remove('dark');
       document.documentElement.classList.add('light');
     }
-  }, []);
+  }, [isDarkMode]);
 
   const toggleTheme = () => {
     const newMode = !isDarkMode;
@@ -37,6 +40,10 @@ export const Header = () => {
       document.documentElement.classList.remove('dark');
       document.documentElement.classList.add('light');
     }
+  };
+
+  const handleDevelopersClick = () => {
+    navigate('/developers');
   };
 
   return (
@@ -101,6 +108,11 @@ export const Header = () => {
               <DropdownMenuItem className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Configurações</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer" onClick={handleDevelopersClick}>
+                <Code className="mr-2 h-4 w-4" />
+                <span>Desenvolvedores</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
