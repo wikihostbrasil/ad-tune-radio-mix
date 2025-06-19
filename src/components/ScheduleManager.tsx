@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -330,24 +331,24 @@ export const ScheduleManager = () => {
         <CardContent>
           <div className="space-y-4">
             {scheduledAds.map((ad) => (
-              <Card key={ad.id} className="border-border/40">
-                <CardContent className="p-4">
+              <Card key={ad.id} className="border-2 border-border bg-card/80 shadow-sm hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                      <div className={`w-3 h-3 rounded-full ${getTypeColor(ad.type)}`} />
+                      <div className={`w-4 h-4 rounded-full ${getTypeColor(ad.type)} shadow-sm`} />
                       <div>
-                        <h3 className="font-medium text-foreground">
+                        <h3 className="font-semibold text-lg text-foreground">
                           {ad.name || `${adTypes.find(t => t.value === ad.type)?.label} - ${ad.hour}:${ad.minute}`}
                         </h3>
-                        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
+                        <div className="flex items-center space-x-4 text-sm text-muted-foreground mt-1">
+                          <span className="flex items-center gap-1 font-medium">
+                            <Clock className="w-4 h-4" />
                             {ad.hour}:{ad.minute}
                           </span>
-                          <span>{ad.startDate} - {ad.endDate}</span>
+                          <span className="font-medium">{ad.startDate} - {ad.endDate}</span>
                           <div className="flex gap-1">
                             {ad.weekDays.map(dayId => (
-                              <Badge key={dayId} variant="secondary" className="text-xs">
+                              <Badge key={dayId} variant="outline" className="text-xs font-medium border-muted-foreground/30">
                                 {weekDays.find(d => d.id === dayId)?.label}
                               </Badge>
                             ))}
@@ -356,14 +357,18 @@ export const ScheduleManager = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-2">
-                      <Badge variant={ad.isActive ? "default" : "secondary"}>
+                    <div className="flex items-center space-x-3">
+                      <Badge 
+                        variant={ad.isActive ? "default" : "secondary"} 
+                        className={ad.isActive ? "bg-success text-white font-medium" : "bg-muted text-muted-foreground font-medium"}
+                      >
                         {ad.isActive ? "Ativo" : "Bloqueado"}
                       </Badge>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => toggleStatus(ad.id)}
+                        className="hover:bg-accent/50"
                       >
                         <Play className="w-4 h-4" />
                       </Button>
@@ -371,6 +376,7 @@ export const ScheduleManager = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleEdit(ad)}
+                        className="hover:bg-accent/50"
                       >
                         <Edit className="w-4 h-4" />
                       </Button>
@@ -378,7 +384,7 @@ export const ScheduleManager = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDelete(ad.id)}
-                        className="text-destructive hover:text-destructive"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -389,8 +395,10 @@ export const ScheduleManager = () => {
             ))}
 
             {scheduledAds.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
-                Nenhum agendamento criado ainda.
+              <div className="text-center py-12 text-muted-foreground">
+                <Calendar className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p className="text-lg font-medium">Nenhum agendamento criado ainda.</p>
+                <p className="text-sm mt-1">Clique em "Novo Agendamento" para começar.</p>
               </div>
             )}
           </div>
