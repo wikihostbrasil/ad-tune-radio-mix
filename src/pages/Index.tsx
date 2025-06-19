@@ -59,7 +59,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 pb-24 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 pb-24 pt-16">
       <Header />
       
       {/* Radio Banner */}
