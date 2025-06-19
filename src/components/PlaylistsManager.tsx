@@ -59,15 +59,15 @@ export const PlaylistsManager = () => {
             />
           </div>
 
-          {/* Lista de Playlists */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Lista de Playlists - 4 colunas no desktop */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filteredGenres.map((genre) => (
               <Card 
                 key={genre.id} 
-                className={`border transition-all duration-200 cursor-pointer hover:shadow-lg ${
+                className={`border-2 transition-all duration-200 cursor-pointer hover:shadow-lg ${
                   selectedPlaylists.includes(genre.id) 
-                    ? 'border-primary bg-primary/5' 
-                    : 'border-border/40 hover:border-border'
+                    ? 'border-primary bg-primary/10 shadow-md' 
+                    : 'border-border/60 hover:border-primary/50 bg-card/80 hover:bg-card'
                 }`}
                 onClick={() => handlePlaylistToggle(genre.id)}
               >
@@ -80,17 +80,37 @@ export const PlaylistsManager = () => {
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
-                        <div className="w-8 h-8 rounded bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                          <Music className="w-4 h-4 text-primary-foreground" />
+                        <div className={`w-8 h-8 rounded bg-gradient-to-br flex items-center justify-center ${
+                          selectedPlaylists.includes(genre.id)
+                            ? 'from-primary to-primary/80'
+                            : 'from-muted-foreground/80 to-muted-foreground/60'
+                        }`}>
+                          <Music className={`w-4 h-4 ${
+                            selectedPlaylists.includes(genre.id)
+                              ? 'text-primary-foreground'
+                              : 'text-muted-foreground'
+                          }`} />
                         </div>
-                        <h3 className="font-medium text-foreground truncate">
+                        <h3 className={`font-medium truncate ${
+                          selectedPlaylists.includes(genre.id)
+                            ? 'text-foreground'
+                            : 'text-foreground/90'
+                        }`}>
                           {genre.name}
                         </h3>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+                      <p className={`text-sm mb-2 line-clamp-2 ${
+                        selectedPlaylists.includes(genre.id)
+                          ? 'text-muted-foreground'
+                          : 'text-muted-foreground/80'
+                      }`}>
                         {genre.description}
                       </p>
-                      <div className="text-xs text-muted-foreground">
+                      <div className={`text-xs ${
+                        selectedPlaylists.includes(genre.id)
+                          ? 'text-muted-foreground'
+                          : 'text-muted-foreground/70'
+                      }`}>
                         {genre.songs} músicas
                       </div>
                     </div>
