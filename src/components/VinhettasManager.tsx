@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -255,7 +254,9 @@ export const VinhettasManager = () => {
                         <Switch
                           checked={category.active}
                           onCheckedChange={() => toggleCategoryStatus(category.id)}
-                          className="data-[state=checked]:bg-green-500"
+                          style={{
+                            backgroundColor: category.active ? '#22c55e' : undefined
+                          }}
                         />
                       </TooltipTrigger>
                       <TooltipContent>
