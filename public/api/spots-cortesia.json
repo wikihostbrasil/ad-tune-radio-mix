@@ -1,0 +1,45 @@
+
+[
+  {
+    "id": "1",
+    "title": "Dicas Gerais",
+    "type": "dicas_gerais",
+    "playEvery": 20,
+    "active": true
+  },
+  {
+    "id": "2",
+    "title": "Dicas de Cozinha",
+    "type": "dicas_cozinha",
+    "playEvery": 25,
+    "active": false
+  },
+  {
+    "id": "3",
+    "title": "Dicas de Saúde",
+    "type": "dicas_saude",
+    "playEvery": 30,
+    "active": true
+  },
+  {
+    "id": "4",
+    "title": "Dicas de Beleza",
+    "type": "dicas_beleza",
+    "playEvery": 35,
+    "active": false
+  },
+  {
+    "id": "5",
+    "title": "Dicas de Moda",
+    "type": "dicas_moda",
+    "playEvery": 40,
+    "active": false
+  },
+  {
+    "id": "6",
+    "title": "Dicas de Tecnologia",
+    "type": "dicas_tecnologia",
+    "playEvery": 30,
+    "active": true
+  }
+]

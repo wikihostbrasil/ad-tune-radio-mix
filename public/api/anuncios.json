@@ -1,0 +1,46 @@
+
+[
+  {
+    "id": "1",
+    "title": "Vinheta Manhã Alegre",
+    "category": "Vinhetas",
+    "duration": "0:05",
+    "type": "vinheta",
+    "playEvery": 3,
+    "active": true,
+    "fileCount": 2
+  },
+  {
+    "id": "2",
+    "title": "Campanha Institucional",
+    "category": "Institucionais",
+    "duration": "0:30",
+    "type": "institucional",
+    "playEvery": 15,
+    "active": true,
+    "fileCount": 1
+  },
+  {
+    "id": "3",
+    "title": "Promoção Black Friday",
+    "category": "Promocionais",
+    "duration": "0:25",
+    "type": "promocional",
+    "playEvery": 12,
+    "active": false,
+    "fileCount": 3,
+    "startDate": "2024-11-20",
+    "endDate": "2024-11-30",
+    "days": ["Seg", "Ter", "Qua", "Qui", "Sex"]
+  },
+  {
+    "id": "4",
+    "title": "Hora Certa",
+    "category": "Hora Certa",
+    "duration": "0:03",
+    "type": "hora",
+    "playEvery": 60,
+    "active": true,
+    "fileCount": 1
+  }
+]

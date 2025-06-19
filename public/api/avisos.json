@@ -1,0 +1,30 @@
+
+[
+  {
+    "id": "1",
+    "title": "Aviso Geral - Horário de Funcionamento",
+    "category": "Avisos Gerais",
+    "duration": "0:15",
+    "type": "geral",
+    "playEvery": 5,
+    "active": true
+  },
+  {
+    "id": "2",
+    "title": "Promoção Especial - Final de Semana",
+    "category": "Avisos Exclusivos",
+    "duration": "0:20",
+    "type": "exclusivo",
+    "playEvery": 8,
+    "active": true
+  },
+  {
+    "id": "3",
+    "title": "Informativo - Trânsito",
+    "category": "Avisos Gerais",
+    "duration": "0:10",
+    "type": "geral",
+    "playEvery": 10,
+    "active": false
+  }
+]

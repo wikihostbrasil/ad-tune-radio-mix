@@ -38,16 +38,10 @@ const Stream = () => {
       <div className="absolute inset-0 flex items-center justify-center opacity-10">
         <div className="w-96 h-96 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center blur-3xl">
           <img 
-            src={logoUrl} 
-            alt="Logo" 
+            src="https://placehold.co/200x200/0066FF/FFFFFF?text=LOGO" 
+            alt="Background Logo" 
             className="w-48 h-48 object-contain opacity-50"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-              target.nextElementSibling?.classList.remove('hidden');
-            }}
           />
-          <RadioIcon className="w-48 h-48 text-white hidden" />
         </div>
       </div>
 
@@ -57,16 +51,10 @@ const Stream = () => {
         <div className="mb-8 flex flex-col items-center">
           <div className="w-40 h-40 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-6 shadow-2xl overflow-hidden">
             <img 
-              src={logoUrl} 
+              src="https://placehold.co/160x160/0066FF/FFFFFF?text=LOGO" 
               alt="Logo" 
-              className="w-32 h-32 object-contain"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                target.nextElementSibling?.classList.remove('hidden');
-              }}
+              className="w-32 h-32 object-contain rounded-full"
             />
-            <RadioIcon className="w-20 h-20 text-white hidden" />
           </div>
           <h1 className="text-4xl font-bold text-center text-foreground mb-2">Rádio Mix FM</h1>
           <p className="text-center text-muted-foreground">
@@ -108,6 +96,21 @@ const Stream = () => {
       {/* Footer Player */}
       <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur border-t border-border p-4">
         <div className="container mx-auto">
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+              <span>{currentTrack.currentTime}</span>
+              <span>{currentTrack.duration}</span>
+            </div>
+            <Slider
+              value={progress}
+              onValueChange={setProgress}
+              max={100}
+              step={1}
+              className="w-full"
+            />
+          </div>
+
           <div className="flex items-center justify-center space-x-6">
             <Button
               variant="ghost"
@@ -120,7 +123,7 @@ const Stream = () => {
             <Button
               onClick={() => setIsPlaying(!isPlaying)}
               size="icon"
-              className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white transition-all duration-200 hover:scale-105 animate-pulse"
+              className={`w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white transition-all duration-200 hover:scale-105 ${isPlaying ? '' : 'animate-pulse'}`}
             >
               {isPlaying ? (
                 <Pause className="w-6 h-6" />

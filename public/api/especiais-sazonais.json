@@ -1,0 +1,21 @@
+
+[
+  {
+    "id": "1",
+    "title": "Natal 2024",
+    "type": "natal",
+    "startDate": "2024-12-01",
+    "endDate": "2024-12-25",
+    "active": true,
+    "playEvery": 10
+  },
+  {
+    "id": "2",
+    "title": "Ano Novo 2025",
+    "type": "ano_novo",
+    "startDate": "2024-12-26",
+    "endDate": "2025-01-02",
+    "active": false,
+    "playEvery": 8
+  }
+]

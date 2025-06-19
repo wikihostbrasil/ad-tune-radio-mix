@@ -1,0 +1,25 @@
+
+[
+  {
+    "id": "1",
+    "title": "Anúncio Promocional - Loja ABC",
+    "text": "Venha conhecer a Loja ABC, com os melhores preços da cidade!",
+    "voice": "feminina_jovem",
+    "speed": "normal",
+    "tone": "animada",
+    "category": "Promocionais",
+    "status": "gerado",
+    "createdAt": "2024-06-18T10:30:00Z"
+  },
+  {
+    "id": "2",
+    "title": "Institucional - Rádio Mix FM",
+    "text": "Você está ouvindo a Rádio Mix FM, sempre com a melhor música!",
+    "voice": "masculina_grave",
+    "speed": "lenta",
+    "tone": "institucional",
+    "category": "Institucionais",
+    "status": "processando",
+    "createdAt": "2024-06-18T14:15:00Z"
+  }
+]

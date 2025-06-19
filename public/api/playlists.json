@@ -2,29 +2,57 @@
 [
   {
     "id": "1",
-    "name": "Hits Brasileiros",
+    "name": "Pop Internacional",
+    "description": "Sucessos pop do mundo todo",
     "category": "Minhas Playlists",
-    "tracks": 150,
-    "duration": "10h 30m",
+    "tracks": 120,
+    "duration": "8h 30m",
+    "image": "https://placehold.co/100x100/FF6B6B/FFFFFF?text=POP",
     "selected": true,
     "dayOfWeek": "Padrão"
   },
   {
-    "id": "2", 
-    "name": "Rock Nacional",
+    "id": "2",
+    "name": "Rock Clássico",
+    "description": "Os maiores clássicos do rock",
     "category": "O Melhor do Rock",
-    "tracks": 200,
-    "duration": "13h 45m",
+    "tracks": 85,
+    "duration": "6h 15m",
+    "image": "https://placehold.co/100x100/4ECDC4/FFFFFF?text=ROCK",
     "selected": false,
     "dayOfWeek": "Padrão"
   },
   {
     "id": "3",
-    "name": "Sertanejo Atual",
-    "category": "Sertanejo",
-    "tracks": 180,
-    "duration": "12h 15m", 
+    "name": "MPB",
+    "description": "Música Popular Brasileira",
+    "category": "Regionais",
+    "tracks": 95,
+    "duration": "7h 20m",
+    "image": "https://placehold.co/100x100/45B7D1/FFFFFF?text=MPB",
     "selected": true,
+    "dayOfWeek": "Padrão"
+  },
+  {
+    "id": "4",
+    "name": "Sertanejo Atual",
+    "description": "Hits sertanejos atuais e clássicos",
+    "category": "Sertanejo",
+    "tracks": 110,
+    "duration": "9h 10m",
+    "image": "https://placehold.co/100x100/F7DC6F/000000?text=SERTANEJO",
+    "selected": false,
+    "dayOfWeek": "Padrão"
+  },
+  {
+    "id": "5",
+    "name": "Eletrônica",
+    "description": "Dance e música eletrônica",
+    "category": "Hits do Momento",
+    "tracks": 75,
+    "duration": "5h 45m",
+    "image": "https://placehold.co/100x100/BB8FCE/FFFFFF?text=ELECTRONIC",
+    "selected": false,
     "dayOfWeek": "Padrão"
   }
 ]
