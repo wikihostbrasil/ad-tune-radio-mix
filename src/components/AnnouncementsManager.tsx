@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmployeeManagementModal } from "@/components/EmployeeManagementModal";
 import { VehicleManager } from "@/components/VehicleManager";
+import ReactSelect from 'react-select';
 
 interface Announcement {
   id: string;
@@ -23,6 +24,12 @@ interface ScheduledAnnouncement {
   announcementId: string;
   frequency: number;
   type: "geral" | "exclusivo";
+}
+
+interface SelectOption {
+  value: string;
+  label: string;
+  duration: string;
 }
 
 export const AnnouncementsManager = () => {
@@ -75,6 +82,69 @@ export const AnnouncementsManager = () => {
 
     fetchAnnouncements();
   }, []);
+
+  // Convert announcements to select options
+  const announcementOptions: SelectOption[] = announcements.map(announcement => ({
+    value: announcement.id,
+    label: announcement.title,
+    duration: announcement.duration
+  }));
+
+  // Custom styles for React Select to match the theme
+  const customSelectStyles = {
+    control: (provided: any, state: any) => ({
+      ...provided,
+      backgroundColor: 'hsl(var(--background))',
+      borderColor: state.isFocused ? 'hsl(var(--ring))' : 'hsl(var(--border))',
+      borderRadius: '0.375rem',
+      minHeight: '2.5rem',
+      boxShadow: state.isFocused ? '0 0 0 2px hsl(var(--ring))' : 'none',
+      '&:hover': {
+        borderColor: 'hsl(var(--border))'
+      }
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      backgroundColor: 'hsl(var(--popover))',
+      border: '1px solid hsl(var(--border))',
+      borderRadius: '0.375rem',
+      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+      zIndex: 50
+    }),
+    option: (provided: any, state: any) => ({
+      ...provided,
+      backgroundColor: state.isFocused ? 'hsl(var(--accent))' : 'transparent',
+      color: state.isFocused ? 'hsl(var(--accent-foreground))' : 'hsl(var(--foreground))',
+      padding: '0.5rem 0.75rem',
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: 'hsl(var(--accent))',
+        color: 'hsl(var(--accent-foreground))'
+      }
+    }),
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: 'hsl(var(--foreground))'
+    }),
+    placeholder: (provided: any) => ({
+      ...provided,
+      color: 'hsl(var(--muted-foreground))'
+    }),
+    input: (provided: any) => ({
+      ...provided,
+      color: 'hsl(var(--foreground))'
+    })
+  };
+
+  // Custom option component to show duration badge
+  const CustomOption = ({ data, ...props }: any) => (
+    <div {...props.innerProps} className={`flex items-center justify-between p-2 cursor-pointer hover:bg-accent hover:text-accent-foreground ${props.isFocused ? 'bg-accent text-accent-foreground' : ''}`}>
+      <span>{data.label}</span>
+      <Badge variant="outline" className="ml-2 text-xs">
+        {data.duration}
+      </Badge>
+    </div>
+  );
 
   const togglePlay = (id: string) => {
     if (playingId === id) {
@@ -170,23 +240,17 @@ export const AnnouncementsManager = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Select value={selectedAnnouncement} onValueChange={setSelectedAnnouncement}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Buscar e selecionar um aviso..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {announcements.map((announcement) => (
-                    <SelectItem key={announcement.id} value={announcement.id}>
-                      <div className="flex items-center justify-between w-full">
-                        <span>{announcement.title}</span>
-                        <Badge variant="outline" className="ml-2">
-                          {announcement.duration}
-                        </Badge>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <ReactSelect
+                options={announcementOptions}
+                value={announcementOptions.find(option => option.value === selectedAnnouncement) || null}
+                onChange={(option) => setSelectedAnnouncement(option?.value || "")}
+                placeholder="Buscar e selecionar um aviso..."
+                isSearchable
+                isClearable
+                styles={customSelectStyles}
+                components={{ Option: CustomOption }}
+                noOptionsMessage={() => "Nenhum aviso encontrado"}
+              />
             </div>
 
             {/* Selected announcement preview */}
@@ -236,21 +300,17 @@ export const AnnouncementsManager = () => {
             {scheduledGeneral.map((scheduled) => (
               <div key={scheduled.id} className="flex items-center space-x-2 p-3 bg-accent/10 rounded-lg border">
                 <div className="flex items-center space-x-2 flex-1">
-                  <Select 
-                    value={scheduled.announcementId} 
-                    onValueChange={(value) => updateScheduledAnnouncement(scheduled.id, "announcementId", value, "geral")}
-                  >
-                    <SelectTrigger className="flex-1">
-                      <SelectValue placeholder="Selecione o aviso" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {announcements.map((announcement) => (
-                        <SelectItem key={announcement.id} value={announcement.id}>
-                          {announcement.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <ReactSelect
+                    options={announcementOptions}
+                    value={announcementOptions.find(option => option.value === scheduled.announcementId) || null}
+                    onChange={(option) => updateScheduledAnnouncement(scheduled.id, "announcementId", option?.value || "", "geral")}
+                    placeholder="Selecione o aviso"
+                    isSearchable
+                    isClearable
+                    styles={customSelectStyles}
+                    components={{ Option: CustomOption }}
+                    className="flex-1"
+                  />
                   <Button
                     variant="ghost"
                     size="sm"
@@ -315,23 +375,17 @@ export const AnnouncementsManager = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Select value={selectedAnnouncementExclusive} onValueChange={setSelectedAnnouncementExclusive}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Buscar e selecionar um aviso..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {announcements.map((announcement) => (
-                    <SelectItem key={announcement.id} value={announcement.id}>
-                      <div className="flex items-center justify-between w-full">
-                        <span>{announcement.title}</span>
-                        <Badge variant="outline" className="ml-2">
-                          {announcement.duration}
-                        </Badge>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <ReactSelect
+                options={announcementOptions}
+                value={announcementOptions.find(option => option.value === selectedAnnouncementExclusive) || null}
+                onChange={(option) => setSelectedAnnouncementExclusive(option?.value || "")}
+                placeholder="Buscar e selecionar um aviso..."
+                isSearchable
+                isClearable
+                styles={customSelectStyles}
+                components={{ Option: CustomOption }}
+                noOptionsMessage={() => "Nenhum aviso encontrado"}
+              />
             </div>
 
             {/* Selected announcement preview */}
@@ -381,21 +435,17 @@ export const AnnouncementsManager = () => {
             {scheduledExclusive.map((scheduled) => (
               <div key={scheduled.id} className="flex items-center space-x-2 p-3 bg-accent/10 rounded-lg border">
                 <div className="flex items-center space-x-2 flex-1">
-                  <Select 
-                    value={scheduled.announcementId} 
-                    onValueChange={(value) => updateScheduledAnnouncement(scheduled.id, "announcementId", value, "exclusivo")}
-                  >
-                    <SelectTrigger className="flex-1">
-                      <SelectValue placeholder="Selecione o aviso" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {announcements.map((announcement) => (
-                        <SelectItem key={announcement.id} value={announcement.id}>
-                          {announcement.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <ReactSelect
+                    options={announcementOptions}
+                    value={announcementOptions.find(option => option.value === scheduled.announcementId) || null}
+                    onChange={(option) => updateScheduledAnnouncement(scheduled.id, "announcementId", option?.value || "", "exclusivo")}
+                    placeholder="Selecione o aviso"
+                    isSearchable
+                    isClearable
+                    styles={customSelectStyles}
+                    components={{ Option: CustomOption }}
+                    className="flex-1"
+                  />
                   <Button
                     variant="ghost"
                     size="sm"
