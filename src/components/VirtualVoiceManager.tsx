@@ -57,6 +57,7 @@ export const VirtualVoiceManager = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [previewVoiceId, setPreviewVoiceId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     text: "",
@@ -128,6 +129,15 @@ export const VirtualVoiceManager = () => {
     }
   };
 
+  const toggleVoicePreview = (voiceId: string) => {
+    if (previewVoiceId === voiceId) {
+      setPreviewVoiceId(null);
+    } else {
+      setPreviewVoiceId(voiceId);
+      setTimeout(() => setPreviewVoiceId(null), 3000);
+    }
+  };
+
   const toggleStatus = (id: string) => {
     setVirtualAds(prev => prev.map(ad => 
       ad.id === id ? { ...ad, status: ad.status === "active" ? "blocked" : "active" } : ad
@@ -188,21 +198,71 @@ export const VirtualVoiceManager = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="voice">Selecionar voz</Label>
-                  <Select value={formData.voice} onValueChange={(value) => setFormData(prev => ({ ...prev, voice: value }))}>
+                  <Select 
+                    value={formData.voice} 
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, voice: value }))}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Escolha uma voz" />
                     </SelectTrigger>
                     <SelectContent>
                       {voices.map(voice => (
                         <SelectItem key={voice.id} value={voice.id}>
-                          <div>
-                            <div className="font-medium">{voice.name}</div>
-                            <div className="text-xs text-muted-foreground">{voice.description}</div>
+                          <div className="flex items-center justify-between w-full">
+                            <div>
+                              <div className="font-medium">{voice.name}</div>
+                              <div className="text-xs text-muted-foreground">{voice.description}</div>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleVoicePreview(voice.id);
+                              }}
+                              className="ml-2"
+                            >
+                              {previewVoiceId === voice.id ? (
+                                <Pause className="w-3 h-3" />
+                              ) : (
+                                <Play className="w-3 h-3" />
+                              )}
+                            </Button>
                           </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  
+                  {formData.voice && (
+                    <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-950/30 rounded border border-blue-200 dark:border-blue-800">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-blue-700 dark:text-blue-300">
+                          Preview: {voices.find(v => v.id === formData.voice)?.name}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleVoicePreview(formData.voice)}
+                          className="text-blue-600 hover:text-blue-700"
+                        >
+                          {previewVoiceId === formData.voice ? (
+                            <Pause className="w-4 h-4" />
+                          ) : (
+                            <Play className="w-4 h-4" />
+                          )}
+                        </Button>
+                      </div>
+                      {previewVoiceId === formData.voice && (
+                        <div className="mt-2 flex items-center space-x-2">
+                          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                          <span className="text-xs text-blue-600 dark:text-blue-400">
+                            Reproduzindo preview da voz...
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div>

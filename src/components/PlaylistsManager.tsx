@@ -67,7 +67,7 @@ export const PlaylistsManager = () => {
                 className={`border-2 transition-all duration-200 cursor-pointer hover:shadow-lg ${
                   selectedPlaylists.includes(genre.id) 
                     ? 'border-primary bg-primary/10 shadow-md' 
-                    : 'border-border/60 hover:border-primary/50 bg-card/80 hover:bg-card'
+                    : 'border-border/40 hover:border-primary/50 bg-card/60 hover:bg-card shadow-sm'
                 }`}
                 onClick={() => handlePlaylistToggle(genre.id)}
               >
@@ -83,18 +83,18 @@ export const PlaylistsManager = () => {
                         <div className={`w-8 h-8 rounded bg-gradient-to-br flex items-center justify-center ${
                           selectedPlaylists.includes(genre.id)
                             ? 'from-primary to-primary/80'
-                            : 'from-muted-foreground/80 to-muted-foreground/60'
+                            : 'from-muted-foreground/60 to-muted-foreground/40'
                         }`}>
                           <Music className={`w-4 h-4 ${
                             selectedPlaylists.includes(genre.id)
                               ? 'text-primary-foreground'
-                              : 'text-muted-foreground'
+                              : 'text-muted-foreground/80'
                           }`} />
                         </div>
                         <h3 className={`font-medium truncate ${
                           selectedPlaylists.includes(genre.id)
                             ? 'text-foreground'
-                            : 'text-foreground/90'
+                            : 'text-foreground/80'
                         }`}>
                           {genre.name}
                         </h3>
@@ -102,14 +102,14 @@ export const PlaylistsManager = () => {
                       <p className={`text-sm mb-2 line-clamp-2 ${
                         selectedPlaylists.includes(genre.id)
                           ? 'text-muted-foreground'
-                          : 'text-muted-foreground/80'
+                          : 'text-muted-foreground/70'
                       }`}>
                         {genre.description}
                       </p>
                       <div className={`text-xs ${
                         selectedPlaylists.includes(genre.id)
                           ? 'text-muted-foreground'
-                          : 'text-muted-foreground/70'
+                          : 'text-muted-foreground/60'
                       }`}>
                         {genre.songs} músicas
                       </div>

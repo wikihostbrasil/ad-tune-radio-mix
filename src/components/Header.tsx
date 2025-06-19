@@ -58,7 +58,7 @@ export const Header = () => {
   return (
     <TooltipProvider>
       <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-        <div className="container mx-auto h-full flex items-center justify-between px-4 lg:px-6">
+        <div className="h-full flex items-center justify-between px-4">
           {/* Logo e Nome da Rádio */}
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
