@@ -1,9 +1,10 @@
 
 import { useState, useEffect } from "react";
-import { RadioIcon, User, Settings, Lock, LogOut, Sun, Moon, Code, ArrowUp } from "lucide-react";
+import { RadioIcon, User, Settings, Lock, LogOut, Sun, Moon, Code, ArrowUp, Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,7 +56,7 @@ export const Header = () => {
   };
 
   return (
-    <>
+    <TooltipProvider>
       <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
         <div className="container mx-auto h-full flex items-center justify-between px-4 lg:px-6">
           {/* Logo e Nome da Rádio */}
@@ -73,34 +74,61 @@ export const Header = () => {
             </div>
             <div>
               <h1 className="text-lg font-bold text-foreground">Rádio Mix FM</h1>
-              <Badge variant="secondary" className="text-xs">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1 animate-pulse"></div>
-                No Ar
-              </Badge>
             </div>
           </div>
 
           {/* Avatar e Controles */}
           <div className="flex items-center space-x-3">
             {/* Botão Upgrade */}
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-gradient-to-r from-blue-500 to-blue-700 text-white border-blue-500 hover:from-blue-600 hover:to-blue-800"
-            >
-              <ArrowUp className="w-4 h-4 mr-1" />
-              Upgrade
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-gradient-to-r from-blue-500 to-blue-700 text-white border-blue-500 hover:from-blue-600 hover:to-blue-800"
+                >
+                  <ArrowUp className="w-4 h-4 mr-1" />
+                  Upgrade
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Fazer upgrade do plano</p>
+              </TooltipContent>
+            </Tooltip>
+
+            {/* Botão Notificações */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-muted-foreground hover:text-foreground relative"
+                >
+                  <Bell className="w-4 h-4" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Novidades</p>
+              </TooltipContent>
+            </Tooltip>
 
             {/* Toggle Tema */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleTheme}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isDarkMode ? 'Tema claro' : 'Tema escuro'}</p>
+              </TooltipContent>
+            </Tooltip>
 
             {/* Dropdown do Avatar */}
             <DropdownMenu>
@@ -156,6 +184,6 @@ export const Header = () => {
       <ProfileModal isOpen={showProfile} onClose={() => setShowProfile(false)} />
       <PasswordModal isOpen={showPassword} onClose={() => setShowPassword(false)} />
       <ConfigurationsModal isOpen={showConfigurations} onClose={() => setShowConfigurations(false)} />
-    </>
+    </TooltipProvider>
   );
 };
