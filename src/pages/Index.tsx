@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { RadioIcon, Music, Settings, BarChart3, Calendar, Disc3, Mic, ArrowUp } from "lucide-react";
+import { RadioIcon, Music, Settings, BarChart3, Calendar, Disc3, Mic, MessageSquare } from "lucide-react";
 import { VinhettasManager } from "@/components/VinhettasManager";
 import { AnnouncementsManager } from "@/components/AnnouncementsManager";
 import { PromotionsManager } from "@/components/PromotionsManager";
@@ -77,18 +77,6 @@ const Index = () => {
       </div>
       
       <div className="container mx-auto p-4 lg:p-6 pt-8">
-        {/* Action Buttons */}
-        <div className="flex justify-between items-center mb-6">
-          <div></div>
-          <Button 
-            onClick={() => setShowSuggestions(true)}
-            variant="outline"
-            className="flex items-center gap-2"
-          >
-            Sugestões
-          </Button>
-        </div>
-
         {/* Navigation Tabs */}
         <div className="flex flex-wrap gap-2 mb-6 p-1 bg-card/50 rounded-lg border border-border/40">
           {tabs.map((tab) => {
@@ -118,6 +106,15 @@ const Index = () => {
           {renderContent()}
         </div>
       </div>
+
+      {/* Floating Suggestions Button */}
+      <Button 
+        onClick={() => setShowSuggestions(true)}
+        className="fixed bottom-28 right-6 z-40 rounded-full w-14 h-14 shadow-lg bg-blue-600 hover:bg-blue-700 text-white"
+        size="icon"
+      >
+        <MessageSquare className="w-6 h-6" />
+      </Button>
 
       <Player />
       <SuggestionsModal 

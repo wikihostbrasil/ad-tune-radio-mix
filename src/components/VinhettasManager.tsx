@@ -242,10 +242,12 @@ export const VinhettasManager = () => {
                       </div>
                       <div>
                         <CardTitle className="text-lg">{category.name}</CardTitle>
-                        <p className="text-sm text-muted-foreground">{category.description}</p>
-                        <Badge variant="outline" className="text-xs mt-1">
-                          {category.count} anúncios
-                        </Badge>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <p className="text-sm text-muted-foreground">{category.description}</p>
+                          <Badge variant="outline" className="text-xs">
+                            {category.count} anúncios
+                          </Badge>
+                        </div>
                       </div>
                     </div>
                     <Tooltip>
@@ -264,7 +266,7 @@ export const VinhettasManager = () => {
                 </CardHeader>
 
                 <CardContent>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
                     <Label className="text-sm font-medium">
                       Tocar a cada:
                     </Label>
