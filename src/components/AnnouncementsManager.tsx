@@ -3,13 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { ChevronUp, ChevronDown, Plus, Trash2 } from "lucide-react";
+import { ChevronUp, ChevronDown, Plus, Trash2, Check, ChevronUpDown } from "lucide-react";
 import { Play, Pause, RadioIcon, Volume2, Users, Car } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmployeeManagementModal } from "@/components/EmployeeManagementModal";
 import { VehicleManager } from "@/components/VehicleManager";
-import ReactSelect from 'react-select';
+import { Combobox } from '@headlessui/react';
+import { cn } from "@/lib/utils";
 
 interface Announcement {
   id: string;
@@ -43,6 +44,12 @@ export const AnnouncementsManager = () => {
   
   const [scheduledGeneral, setScheduledGeneral] = useState<ScheduledAnnouncement[]>([]);
   const [scheduledExclusive, setScheduledExclusive] = useState<ScheduledAnnouncement[]>([]);
+
+  // Query states for comboboxes
+  const [queryGeneral, setQueryGeneral] = useState('');
+  const [queryExclusive, setQueryExclusive] = useState('');
+  const [queryScheduledGeneral, setQueryScheduledGeneral] = useState<{[key: string]: string}>({});
+  const [queryScheduledExclusive, setQueryScheduledExclusive] = useState<{[key: string]: string}>({});
 
   // Load announcements from API
   useEffect(() => {
@@ -90,61 +97,22 @@ export const AnnouncementsManager = () => {
     duration: announcement.duration
   }));
 
-  // Custom styles for React Select to match the theme
-  const customSelectStyles = {
-    control: (provided: any, state: any) => ({
-      ...provided,
-      backgroundColor: 'hsl(var(--background))',
-      borderColor: state.isFocused ? 'hsl(var(--ring))' : 'hsl(var(--border))',
-      borderRadius: '0.375rem',
-      minHeight: '2.5rem',
-      boxShadow: state.isFocused ? '0 0 0 2px hsl(var(--ring))' : 'none',
-      '&:hover': {
-        borderColor: 'hsl(var(--border))'
-      }
-    }),
-    menu: (provided: any) => ({
-      ...provided,
-      backgroundColor: 'hsl(var(--popover))',
-      border: '1px solid hsl(var(--border))',
-      borderRadius: '0.375rem',
-      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-      zIndex: 50
-    }),
-    option: (provided: any, state: any) => ({
-      ...provided,
-      backgroundColor: state.isFocused ? 'hsl(var(--accent))' : 'transparent',
-      color: state.isFocused ? 'hsl(var(--accent-foreground))' : 'hsl(var(--foreground))',
-      padding: '0.5rem 0.75rem',
-      cursor: 'pointer',
-      '&:hover': {
-        backgroundColor: 'hsl(var(--accent))',
-        color: 'hsl(var(--accent-foreground))'
-      }
-    }),
-    singleValue: (provided: any) => ({
-      ...provided,
-      color: 'hsl(var(--foreground))'
-    }),
-    placeholder: (provided: any) => ({
-      ...provided,
-      color: 'hsl(var(--muted-foreground))'
-    }),
-    input: (provided: any) => ({
-      ...provided,
-      color: 'hsl(var(--foreground))'
-    })
+  // Filter functions for comboboxes
+  const getFilteredAnnouncements = (query: string) => {
+    return query === ''
+      ? announcementOptions
+      : announcementOptions.filter((option) =>
+          option.label.toLowerCase().includes(query.toLowerCase())
+        );
   };
 
-  // Custom option component to show duration badge
-  const CustomOption = ({ data, ...props }: any) => (
-    <div {...props.innerProps} className={`flex items-center justify-between p-2 cursor-pointer hover:bg-accent hover:text-accent-foreground ${props.isFocused ? 'bg-accent text-accent-foreground' : ''}`}>
-      <span>{data.label}</span>
-      <Badge variant="outline" className="ml-2 text-xs">
-        {data.duration}
-      </Badge>
-    </div>
-  );
+  const getSelectedAnnouncement = (id: string) => {
+    return announcements.find(a => a.id === id);
+  };
+
+  const getSelectedOption = (id: string) => {
+    return announcementOptions.find(option => option.value === id);
+  };
 
   const togglePlay = (id: string) => {
     if (playingId === id) {
@@ -239,18 +207,57 @@ export const AnnouncementsManager = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <ReactSelect
-                options={announcementOptions}
-                value={announcementOptions.find(option => option.value === selectedAnnouncement) || null}
-                onChange={(option) => setSelectedAnnouncement(option?.value || "")}
-                placeholder="Buscar e selecionar um aviso..."
-                isSearchable
-                isClearable
-                styles={customSelectStyles}
-                components={{ Option: CustomOption }}
-                noOptionsMessage={() => "Nenhum aviso encontrado"}
-              />
+            <div className="relative">
+              <Combobox value={selectedAnnouncement} onChange={setSelectedAnnouncement}>
+                <div className="relative">
+                  <Combobox.Input
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 pr-10"
+                    displayValue={(announcementId: string) => getSelectedOption(announcementId)?.label || ''}
+                    onChange={(event) => setQueryGeneral(event.target.value)}
+                    placeholder="Buscar e selecionar um aviso..."
+                  />
+                  <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                    <ChevronUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                  </Combobox.Button>
+                </div>
+                <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-popover border border-border py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  {getFilteredAnnouncements(queryGeneral).map((option) => (
+                    <Combobox.Option
+                      key={option.value}
+                      className={({ active }) =>
+                        cn(
+                          'relative cursor-default select-none py-2 pl-3 pr-9',
+                          active ? 'bg-accent text-accent-foreground' : 'text-foreground'
+                        )
+                      }
+                      value={option.value}
+                    >
+                      {({ selected, active }) => (
+                        <>
+                          <div className="flex items-center justify-between">
+                            <span className={cn('block truncate', selected ? 'font-medium' : 'font-normal')}>
+                              {option.label}
+                            </span>
+                            <Badge variant="outline" className="ml-2 text-xs">
+                              {option.duration}
+                            </Badge>
+                          </div>
+                          {selected ? (
+                            <span className={cn('absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-accent-foreground' : 'text-foreground')}>
+                              <Check className="h-5 w-5" aria-hidden="true" />
+                            </span>
+                          ) : null}
+                        </>
+                      )}
+                    </Combobox.Option>
+                  ))}
+                  {getFilteredAnnouncements(queryGeneral).length === 0 && queryGeneral !== '' && (
+                    <div className="relative cursor-default select-none py-2 px-4 text-muted-foreground">
+                      Nenhum aviso encontrado.
+                    </div>
+                  )}
+                </Combobox.Options>
+              </Combobox>
             </div>
 
             {/* Selected announcement preview */}
@@ -259,10 +266,10 @@ export const AnnouncementsManager = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-medium">
-                      {announcements.find(a => a.id === selectedAnnouncement)?.title}
+                      {getSelectedAnnouncement(selectedAnnouncement)?.title}
                     </h4>
                     <p className="text-sm text-muted-foreground">
-                      {announcements.find(a => a.id === selectedAnnouncement)?.category}
+                      {getSelectedAnnouncement(selectedAnnouncement)?.category}
                     </p>
                   </div>
                   <Button
@@ -300,17 +307,56 @@ export const AnnouncementsManager = () => {
             {scheduledGeneral.map((scheduled) => (
               <div key={scheduled.id} className="flex items-center space-x-2 p-3 bg-accent/10 rounded-lg border">
                 <div className="flex items-center space-x-2 flex-1">
-                  <ReactSelect
-                    options={announcementOptions}
-                    value={announcementOptions.find(option => option.value === scheduled.announcementId) || null}
-                    onChange={(option) => updateScheduledAnnouncement(scheduled.id, "announcementId", option?.value || "", "geral")}
-                    placeholder="Selecione o aviso"
-                    isSearchable
-                    isClearable
-                    styles={customSelectStyles}
-                    components={{ Option: CustomOption }}
-                    className="flex-1"
-                  />
+                  <div className="relative flex-1">
+                    <Combobox 
+                      value={scheduled.announcementId} 
+                      onChange={(value) => updateScheduledAnnouncement(scheduled.id, "announcementId", value, "geral")}
+                    >
+                      <div className="relative">
+                        <Combobox.Input
+                          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 pr-10"
+                          displayValue={(announcementId: string) => getSelectedOption(announcementId)?.label || ''}
+                          onChange={(event) => setQueryScheduledGeneral(prev => ({ ...prev, [scheduled.id]: event.target.value }))}
+                          placeholder="Selecione o aviso"
+                        />
+                        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                          <ChevronUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                        </Combobox.Button>
+                      </div>
+                      <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-popover border border-border py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {getFilteredAnnouncements(queryScheduledGeneral[scheduled.id] || '').map((option) => (
+                          <Combobox.Option
+                            key={option.value}
+                            className={({ active }) =>
+                              cn(
+                                'relative cursor-default select-none py-2 pl-3 pr-9',
+                                active ? 'bg-accent text-accent-foreground' : 'text-foreground'
+                              )
+                            }
+                            value={option.value}
+                          >
+                            {({ selected, active }) => (
+                              <>
+                                <div className="flex items-center justify-between">
+                                  <span className={cn('block truncate', selected ? 'font-medium' : 'font-normal')}>
+                                    {option.label}
+                                  </span>
+                                  <Badge variant="outline" className="ml-2 text-xs">
+                                    {option.duration}
+                                  </Badge>
+                                </div>
+                                {selected ? (
+                                  <span className={cn('absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-accent-foreground' : 'text-foreground')}>
+                                    <Check className="h-5 w-5" aria-hidden="true" />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Combobox.Option>
+                        ))}
+                      </Combobox.Options>
+                    </Combobox>
+                  </div>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -374,18 +420,57 @@ export const AnnouncementsManager = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <ReactSelect
-                options={announcementOptions}
-                value={announcementOptions.find(option => option.value === selectedAnnouncementExclusive) || null}
-                onChange={(option) => setSelectedAnnouncementExclusive(option?.value || "")}
-                placeholder="Buscar e selecionar um aviso..."
-                isSearchable
-                isClearable
-                styles={customSelectStyles}
-                components={{ Option: CustomOption }}
-                noOptionsMessage={() => "Nenhum aviso encontrado"}
-              />
+            <div className="relative">
+              <Combobox value={selectedAnnouncementExclusive} onChange={setSelectedAnnouncementExclusive}>
+                <div className="relative">
+                  <Combobox.Input
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 pr-10"
+                    displayValue={(announcementId: string) => getSelectedOption(announcementId)?.label || ''}
+                    onChange={(event) => setQueryExclusive(event.target.value)}
+                    placeholder="Buscar e selecionar um aviso..."
+                  />
+                  <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                    <ChevronUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                  </Combobox.Button>
+                </div>
+                <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-popover border border-border py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  {getFilteredAnnouncements(queryExclusive).map((option) => (
+                    <Combobox.Option
+                      key={option.value}
+                      className={({ active }) =>
+                        cn(
+                          'relative cursor-default select-none py-2 pl-3 pr-9',
+                          active ? 'bg-accent text-accent-foreground' : 'text-foreground'
+                        )
+                      }
+                      value={option.value}
+                    >
+                      {({ selected, active }) => (
+                        <>
+                          <div className="flex items-center justify-between">
+                            <span className={cn('block truncate', selected ? 'font-medium' : 'font-normal')}>
+                              {option.label}
+                            </span>
+                            <Badge variant="outline" className="ml-2 text-xs">
+                              {option.duration}
+                            </Badge>
+                          </div>
+                          {selected ? (
+                            <span className={cn('absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-accent-foreground' : 'text-foreground')}>
+                              <Check className="h-5 w-5" aria-hidden="true" />
+                            </span>
+                          ) : null}
+                        </>
+                      )}
+                    </Combobox.Option>
+                  ))}
+                  {getFilteredAnnouncements(queryExclusive).length === 0 && queryExclusive !== '' && (
+                    <div className="relative cursor-default select-none py-2 px-4 text-muted-foreground">
+                      Nenhum aviso encontrado.
+                    </div>
+                  )}
+                </Combobox.Options>
+              </Combobox>
             </div>
 
             {/* Selected announcement preview */}
@@ -394,10 +479,10 @@ export const AnnouncementsManager = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-medium">
-                      {announcements.find(a => a.id === selectedAnnouncementExclusive)?.title}
+                      {getSelectedAnnouncement(selectedAnnouncementExclusive)?.title}
                     </h4>
                     <p className="text-sm text-muted-foreground">
-                      {announcements.find(a => a.id === selectedAnnouncementExclusive)?.category}
+                      {getSelectedAnnouncement(selectedAnnouncementExclusive)?.category}
                     </p>
                   </div>
                   <Button
@@ -435,17 +520,56 @@ export const AnnouncementsManager = () => {
             {scheduledExclusive.map((scheduled) => (
               <div key={scheduled.id} className="flex items-center space-x-2 p-3 bg-accent/10 rounded-lg border">
                 <div className="flex items-center space-x-2 flex-1">
-                  <ReactSelect
-                    options={announcementOptions}
-                    value={announcementOptions.find(option => option.value === scheduled.announcementId) || null}
-                    onChange={(option) => updateScheduledAnnouncement(scheduled.id, "announcementId", option?.value || "", "exclusivo")}
-                    placeholder="Selecione o aviso"
-                    isSearchable
-                    isClearable
-                    styles={customSelectStyles}
-                    components={{ Option: CustomOption }}
-                    className="flex-1"
-                  />
+                  <div className="relative flex-1">
+                    <Combobox 
+                      value={scheduled.announcementId} 
+                      onChange={(value) => updateScheduledAnnouncement(scheduled.id, "announcementId", value, "exclusivo")}
+                    >
+                      <div className="relative">
+                        <Combobox.Input
+                          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 pr-10"
+                          displayValue={(announcementId: string) => getSelectedOption(announcementId)?.label || ''}
+                          onChange={(event) => setQueryScheduledExclusive(prev => ({ ...prev, [scheduled.id]: event.target.value }))}
+                          placeholder="Selecione o aviso"
+                        />
+                        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                          <ChevronUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                        </Combobox.Button>
+                      </div>
+                      <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-popover border border-border py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {getFilteredAnnouncements(queryScheduledExclusive[scheduled.id] || '').map((option) => (
+                          <Combobox.Option
+                            key={option.value}
+                            className={({ active }) =>
+                              cn(
+                                'relative cursor-default select-none py-2 pl-3 pr-9',
+                                active ? 'bg-accent text-accent-foreground' : 'text-foreground'
+                              )
+                            }
+                            value={option.value}
+                          >
+                            {({ selected, active }) => (
+                              <>
+                                <div className="flex items-center justify-between">
+                                  <span className={cn('block truncate', selected ? 'font-medium' : 'font-normal')}>
+                                    {option.label}
+                                  </span>
+                                  <Badge variant="outline" className="ml-2 text-xs">
+                                    {option.duration}
+                                  </Badge>
+                                </div>
+                                {selected ? (
+                                  <span className={cn('absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-accent-foreground' : 'text-foreground')}>
+                                    <Check className="h-5 w-5" aria-hidden="true" />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Combobox.Option>
+                        ))}
+                      </Combobox.Options>
+                    </Combobox>
+                  </div>
                   <Button
                     variant="ghost"
                     size="sm"
