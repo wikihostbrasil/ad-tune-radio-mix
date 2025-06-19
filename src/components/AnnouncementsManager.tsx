@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ChevronUp, ChevronDown, Plus, Trash2 } from "lucide-react";
-import { Play, Pause, RadioIcon, Volume2, Users, Car } from "lucide-react";
+import { Play, Pause, RadioIcon, Volume2, Users, Car, Check, ChevronUpDown } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmployeeManagementModal } from "@/components/EmployeeManagementModal";
 import { VehicleManager } from "@/components/VehicleManager";
+import { Combobox } from '@headlessui/react';
 
 interface Announcement {
   id: string;
@@ -157,150 +158,201 @@ export const AnnouncementsManager = () => {
     announcement.category.toLowerCase().includes("")
   );
 
-  const GeneralNoticesContent = () => (
-    <div className="grid lg:grid-cols-2 gap-6">
-      {/* Left Column - Selection */}
-      <div className="space-y-4">
-        <Card className="border-border/40">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Volume2 className="w-5 h-5 text-blue-500" />
-              <span>Selecionar Aviso</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Select value={selectedAnnouncement} onValueChange={setSelectedAnnouncement}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Buscar e selecionar um aviso..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {announcements.map((announcement) => (
-                    <SelectItem key={announcement.id} value={announcement.id}>
-                      <div className="flex items-center justify-between w-full">
-                        <span>{announcement.title}</span>
-                        <Badge variant="outline" className="ml-2">
-                          {announcement.duration}
-                        </Badge>
+  const GeneralNoticesContent = () => {
+    const [query, setQuery] = useState('');
+
+    const filteredAnnouncements = query === ''
+      ? announcements
+      : announcements.filter((announcement) =>
+          announcement.title
+            .toLowerCase()
+            .replace(/\s+/g, '')
+            .includes(query.toLowerCase().replace(/\s+/g, ''))
+        );
+
+    return (
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Left Column - Selection */}
+        <div className="space-y-4">
+          <Card className="border-border/40">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Volume2 className="w-5 h-5 text-blue-500" />
+                <span>Selecionar Aviso</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="relative">
+                <Combobox value={selectedAnnouncement} onChange={setSelectedAnnouncement}>
+                  <div className="relative">
+                    <Combobox.Input
+                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      displayValue={(announcementId: string) => {
+                        const announcement = announcements.find(a => a.id === announcementId);
+                        return announcement ? announcement.title : '';
+                      }}
+                      onChange={(event) => setQuery(event.target.value)}
+                      placeholder="Buscar e selecionar um aviso..."
+                    />
+                    <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                      <ChevronUpDown className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    </Combobox.Button>
+                  </div>
+                  <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-popover border border-border py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                    {filteredAnnouncements.length === 0 && query !== '' ? (
+                      <div className="relative cursor-default select-none py-2 px-4 text-muted-foreground">
+                        Nenhum aviso encontrado.
                       </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Selected announcement preview */}
-            {selectedAnnouncement && (
-              <div className="p-3 bg-accent/10 rounded-lg border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium">
-                      {announcements.find(a => a.id === selectedAnnouncement)?.title}
-                    </h4>
-                    <p className="text-sm text-muted-foreground">
-                      {announcements.find(a => a.id === selectedAnnouncement)?.category}
-                    </p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => togglePlay(selectedAnnouncement)}
-                  >
-                    {playingId === selectedAnnouncement ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                  </Button>
-                </div>
+                    ) : (
+                      filteredAnnouncements.map((announcement) => (
+                        <Combobox.Option
+                          key={announcement.id}
+                          className={({ active }) =>
+                            `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                              active ? 'bg-accent text-accent-foreground' : 'text-foreground'
+                            }`
+                          }
+                          value={announcement.id}
+                        >
+                          {({ selected, active }) => (
+                            <>
+                              <div className="flex items-center justify-between">
+                                <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                                  {announcement.title}
+                                </span>
+                                <Badge variant="outline" className="ml-2">
+                                  {announcement.duration}
+                                </Badge>
+                              </div>
+                              {selected ? (
+                                <span className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                  active ? 'text-accent-foreground' : 'text-primary'
+                                }`}>
+                                  <Check className="h-4 w-4" aria-hidden="true" />
+                                </span>
+                              ) : null}
+                            </>
+                          )}
+                        </Combobox.Option>
+                      ))
+                    )}
+                  </Combobox.Options>
+                </Combobox>
               </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
 
-      {/* Right Column - Programming */}
-      <div className="space-y-4">
-        <Card className="border-border/40">
-          <CardHeader>
-            <CardTitle>Programe seus anúncios gerais</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium">Programação automática:</p>
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={() => addScheduledAnnouncement("geral")}
-              >
-                <Plus className="w-4 h-4" />
-              </Button>
-            </div>
-
-            {scheduledGeneral.map((scheduled) => (
-              <div key={scheduled.id} className="flex items-center space-x-2 p-3 bg-accent/10 rounded-lg border">
-                <div className="flex items-center space-x-2 flex-1">
-                  <Select 
-                    value={scheduled.announcementId} 
-                    onValueChange={(value) => updateScheduledAnnouncement(scheduled.id, "announcementId", value, "geral")}
-                  >
-                    <SelectTrigger className="flex-1">
-                      <SelectValue placeholder="Selecione o aviso" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {announcements.map((announcement) => (
-                        <SelectItem key={announcement.id} value={announcement.id}>
-                          {announcement.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => togglePlay(scheduled.id)}
-                  >
-                    {playingId === scheduled.id ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                  </Button>
-                </div>
-
-                <span className="text-sm">tocar a cada</span>
-
-                <div className="flex items-center space-x-1">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => updateFrequency(scheduled.id, -1, "geral")}
-                    className="w-8 h-8 p-0"
-                  >
-                    <ChevronDown className="w-4 h-4" />
-                  </Button>
-                  <div className="w-12 h-8 bg-muted rounded flex items-center justify-center">
-                    <span className="text-sm font-medium">{scheduled.frequency}</span>
+              {/* Selected announcement preview */}
+              {selectedAnnouncement && (
+                <div className="p-3 bg-accent/10 rounded-lg border">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">
+                        {announcements.find(a => a.id === selectedAnnouncement)?.title}
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        {announcements.find(a => a.id === selectedAnnouncement)?.category}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => togglePlay(selectedAnnouncement)}
+                    >
+                      {playingId === selectedAnnouncement ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    </Button>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => updateFrequency(scheduled.id, 1, "geral")}
-                    className="w-8 h-8 p-0"
-                  >
-                    <ChevronUp className="w-4 h-4" />
-                  </Button>
                 </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
-                <span className="text-sm">músicas</span>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeScheduledAnnouncement(scheduled.id, "geral")}
-                  className="text-destructive hover:text-destructive"
+        {/* Right Column - Programming */}
+        <div className="space-y-4">
+          <Card className="border-border/40">
+            <CardHeader>
+              <CardTitle>Programe seus anúncios gerais</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">Programação automática:</p>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => addScheduledAnnouncement("geral")}
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Plus className="w-4 h-4" />
                 </Button>
               </div>
-            ))}
-          </CardContent>
-        </Card>
+
+              {scheduledGeneral.map((scheduled) => (
+                <div key={scheduled.id} className="flex items-center space-x-2 p-3 bg-accent/10 rounded-lg border">
+                  <div className="flex items-center space-x-2 flex-1">
+                    <Select 
+                      value={scheduled.announcementId} 
+                      onValueChange={(value) => updateScheduledAnnouncement(scheduled.id, "announcementId", value, "geral")}
+                    >
+                      <SelectTrigger className="flex-1">
+                        <SelectValue placeholder="Selecione o aviso" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {announcements.map((announcement) => (
+                          <SelectItem key={announcement.id} value={announcement.id}>
+                            {announcement.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => togglePlay(scheduled.id)}
+                    >
+                      {playingId === scheduled.id ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    </Button>
+                  </div>
+
+                  <span className="text-sm">tocar a cada</span>
+
+                  <div className="flex items-center space-x-1">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => updateFrequency(scheduled.id, -1, "geral")}
+                      className="w-8 h-8 p-0"
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
+                    <div className="w-12 h-8 bg-muted rounded flex items-center justify-center">
+                      <span className="text-sm font-medium">{scheduled.frequency}</span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => updateFrequency(scheduled.id, 1, "geral")}
+                      className="w-8 h-8 p-0"
+                    >
+                      <ChevronUp className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  <span className="text-sm">músicas</span>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeScheduledAnnouncement(scheduled.id, "geral")}
+                    className="text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const ExclusiveNoticesContent = () => (
     <div className="grid lg:grid-cols-2 gap-6">
