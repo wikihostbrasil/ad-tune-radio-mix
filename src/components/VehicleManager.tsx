@@ -4,9 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Car, Play } from "lucide-react";
+import { Car, Play, Pause } from "lucide-react";
 
-export const VehicleManager = () => {
+interface VehicleManagerProps {
+  onPlayToggle?: () => void;
+  isPlaying?: boolean;
+}
+
+export const VehicleManager = ({ onPlayToggle, isPlaying = false }: VehicleManagerProps) => {
   const [vehicleModel, setVehicleModel] = useState("");
   const [vehicleColor, setVehicleColor] = useState("");
   const [vehiclePlate, setVehiclePlate] = useState("");
@@ -28,6 +33,9 @@ export const VehicleManager = () => {
   const handlePlay = () => {
     if (vehicleModel && vehicleColor && vehiclePlate.length === 7) {
       console.log("Playing vehicle announcement:", { vehicleModel, vehicleColor, vehiclePlate });
+      if (onPlayToggle) {
+        onPlayToggle();
+      }
     }
   };
 
@@ -90,8 +98,8 @@ export const VehicleManager = () => {
               onClick={handlePlay}
               disabled={!vehicleModel || !vehicleColor || vehiclePlate.length !== 7}
             >
-              <Play className="w-4 h-4 mr-2" />
-              Tocar
+              {isPlaying ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+              {isPlaying ? 'Pausar' : 'Tocar'}
             </Button>
           </div>
         </div>

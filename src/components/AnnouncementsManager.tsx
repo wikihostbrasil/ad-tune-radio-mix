@@ -31,6 +31,8 @@ export const AnnouncementsManager = () => {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+  const [employeePlayingId, setEmployeePlayingId] = useState<string | null>(null);
+  const [vehiclePlayingId, setVehiclePlayingId] = useState<string | null>(null);
   
   const [scheduledGeneral, setScheduledGeneral] = useState<ScheduledAnnouncement[]>([]);
   const [scheduledExclusive, setScheduledExclusive] = useState<ScheduledAnnouncement[]>([]);
@@ -80,6 +82,24 @@ export const AnnouncementsManager = () => {
     } else {
       setPlayingId(id);
       setTimeout(() => setPlayingId(null), 3000);
+    }
+  };
+
+  const toggleEmployeePlay = () => {
+    if (employeePlayingId) {
+      setEmployeePlayingId(null);
+    } else {
+      setEmployeePlayingId("employee-play");
+      setTimeout(() => setEmployeePlayingId(null), 3000);
+    }
+  };
+
+  const toggleVehiclePlay = () => {
+    if (vehiclePlayingId) {
+      setVehiclePlayingId(null);
+    } else {
+      setVehiclePlayingId("vehicle-play");
+      setTimeout(() => setVehiclePlayingId(null), 3000);
     }
   };
 
@@ -138,63 +158,72 @@ export const AnnouncementsManager = () => {
   );
 
   const GeneralNoticesContent = () => (
-    <div className="space-y-6">
-      <Card className="border-border/40">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Volume2 className="w-5 h-5 text-blue-500" />
-            <span>Avisos Gerais</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Select with search */}
-          <div>
-            <Select value={selectedAnnouncement} onValueChange={setSelectedAnnouncement}>
-              <SelectTrigger>
-                <SelectValue placeholder="Buscar e selecionar um aviso..." />
-              </SelectTrigger>
-              <SelectContent>
-                {announcements.map((announcement) => (
-                  <SelectItem key={announcement.id} value={announcement.id}>
-                    <div className="flex items-center justify-between w-full">
-                      <span>{announcement.title}</span>
-                      <Badge variant="outline" className="ml-2">
-                        {announcement.duration}
-                      </Badge>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Selected announcement preview */}
-          {selectedAnnouncement && (
-            <div className="p-3 bg-accent/10 rounded-lg border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium">
-                    {announcements.find(a => a.id === selectedAnnouncement)?.title}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {announcements.find(a => a.id === selectedAnnouncement)?.category}
-                  </p>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => togglePlay(selectedAnnouncement)}
-                >
-                  {playingId === selectedAnnouncement ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                </Button>
-              </div>
+    <div className="grid lg:grid-cols-2 gap-6">
+      {/* Left Column - Selection */}
+      <div className="space-y-4">
+        <Card className="border-border/40">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Volume2 className="w-5 h-5 text-blue-500" />
+              <span>Selecionar Aviso</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Select value={selectedAnnouncement} onValueChange={setSelectedAnnouncement}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Buscar e selecionar um aviso..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {announcements.map((announcement) => (
+                    <SelectItem key={announcement.id} value={announcement.id}>
+                      <div className="flex items-center justify-between w-full">
+                        <span>{announcement.title}</span>
+                        <Badge variant="outline" className="ml-2">
+                          {announcement.duration}
+                        </Badge>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          )}
 
-          {/* Scheduled General Announcements */}
-          <div className="space-y-3">
+            {/* Selected announcement preview */}
+            {selectedAnnouncement && (
+              <div className="p-3 bg-accent/10 rounded-lg border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium">
+                      {announcements.find(a => a.id === selectedAnnouncement)?.title}
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      {announcements.find(a => a.id === selectedAnnouncement)?.category}
+                    </p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => togglePlay(selectedAnnouncement)}
+                  >
+                    {playingId === selectedAnnouncement ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Right Column - Programming */}
+      <div className="space-y-4">
+        <Card className="border-border/40">
+          <CardHeader>
+            <CardTitle>Programe seus anúncios gerais</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium">Programe seus anúncios gerais:</p>
+              <p className="text-sm font-medium">Programação automática:</p>
               <Button 
                 size="sm" 
                 variant="outline"
@@ -267,70 +296,79 @@ export const AnnouncementsManager = () => {
                 </Button>
               </div>
             ))}
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 
   const ExclusiveNoticesContent = () => (
-    <div className="space-y-6">
-      <Card className="border-border/40">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <RadioIcon className="w-5 h-5 text-accent" />
-            <span>Avisos Exclusivos</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Select with search */}
-          <div>
-            <Select value={selectedAnnouncementExclusive} onValueChange={setSelectedAnnouncementExclusive}>
-              <SelectTrigger>
-                <SelectValue placeholder="Buscar e selecionar um aviso..." />
-              </SelectTrigger>
-              <SelectContent>
-                {announcements.map((announcement) => (
-                  <SelectItem key={announcement.id} value={announcement.id}>
-                    <div className="flex items-center justify-between w-full">
-                      <span>{announcement.title}</span>
-                      <Badge variant="outline" className="ml-2">
-                        {announcement.duration}
-                      </Badge>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Selected announcement preview */}
-          {selectedAnnouncementExclusive && (
-            <div className="p-3 bg-accent/10 rounded-lg border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium">
-                    {announcements.find(a => a.id === selectedAnnouncementExclusive)?.title}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {announcements.find(a => a.id === selectedAnnouncementExclusive)?.category}
-                  </p>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => togglePlay(selectedAnnouncementExclusive)}
-                >
-                  {playingId === selectedAnnouncementExclusive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                </Button>
-              </div>
+    <div className="grid lg:grid-cols-2 gap-6">
+      {/* Left Column - Selection */}
+      <div className="space-y-4">
+        <Card className="border-border/40">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <RadioIcon className="w-5 h-5 text-accent" />
+              <span>Selecionar Aviso</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Select value={selectedAnnouncementExclusive} onValueChange={setSelectedAnnouncementExclusive}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Buscar e selecionar um aviso..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {announcements.map((announcement) => (
+                    <SelectItem key={announcement.id} value={announcement.id}>
+                      <div className="flex items-center justify-between w-full">
+                        <span>{announcement.title}</span>
+                        <Badge variant="outline" className="ml-2">
+                          {announcement.duration}
+                        </Badge>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          )}
 
-          {/* Scheduled Exclusive Announcements */}
-          <div className="space-y-3">
+            {/* Selected announcement preview */}
+            {selectedAnnouncementExclusive && (
+              <div className="p-3 bg-accent/10 rounded-lg border">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium">
+                      {announcements.find(a => a.id === selectedAnnouncementExclusive)?.title}
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      {announcements.find(a => a.id === selectedAnnouncementExclusive)?.category}
+                    </p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => togglePlay(selectedAnnouncementExclusive)}
+                  >
+                    {playingId === selectedAnnouncementExclusive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Right Column - Programming */}
+      <div className="space-y-4">
+        <Card className="border-border/40">
+          <CardHeader>
+            <CardTitle>Programe seus anúncios exclusivos</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium">Programe seus anúncios exclusivos:</p>
+              <p className="text-sm font-medium">Programação automática:</p>
               <Button 
                 size="sm" 
                 variant="outline"
@@ -403,9 +441,9 @@ export const AnnouncementsManager = () => {
                 </Button>
               </div>
             ))}
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 
@@ -526,9 +564,12 @@ export const AnnouncementsManager = () => {
                 </div>
                 
                 <div>
-                  <Button className="w-full">
-                    <Play className="w-4 h-4 mr-2" />
-                    Tocar
+                  <Button 
+                    className="w-full"
+                    onClick={toggleEmployeePlay}
+                  >
+                    {employeePlayingId ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+                    {employeePlayingId ? 'Pausar' : 'Tocar'}
                   </Button>
                 </div>
               </div>
@@ -537,7 +578,7 @@ export const AnnouncementsManager = () => {
         </TabsContent>
         
         <TabsContent value="veiculos" className="mt-6">
-          <VehicleManager />
+          <VehicleManager onPlayToggle={toggleVehiclePlay} isPlaying={!!vehiclePlayingId} />
         </TabsContent>
       </Tabs>
 

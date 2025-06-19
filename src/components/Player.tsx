@@ -33,12 +33,12 @@ export const Player = () => {
   }, [isPlaying]);
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 z-50 bg-black text-white border-t border-gray-800">
+    <footer className="fixed bottom-0 left-0 right-0 z-50 text-white border-t border-gray-700" style={{ backgroundColor: '#282E32' }}>
       <div className="flex items-center h-20 px-4">
         
         {/* Left - Track Info */}
         <div className="flex items-center space-x-3 min-w-0 w-1/4">
-          <div className="w-14 h-14 bg-gray-800 rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
+          <div className="w-14 h-14 bg-gray-700 rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
             <img 
               src="https://placehold.co/56x56/333/FFF?text=♪" 
               alt="Album Cover" 
