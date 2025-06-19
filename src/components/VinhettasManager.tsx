@@ -266,7 +266,7 @@ export const VinhettasManager = () => {
                 </CardHeader>
 
                 <CardContent>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center justify-start space-x-2">
                     <Label className="text-sm font-medium">
                       Tocar a cada:
                     </Label>

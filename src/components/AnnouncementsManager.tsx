@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ChevronUp, ChevronDown, Plus, Trash2 } from "lucide-react";
-import { Play, Pause, RadioIcon, Volume2, Search, Users, Car } from "lucide-react";
+import { Play, Pause, RadioIcon, Volume2, Users, Car } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmployeeManagementModal } from "@/components/EmployeeManagementModal";
@@ -28,7 +27,7 @@ interface ScheduledAnnouncement {
 
 export const AnnouncementsManager = () => {
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<string>("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedAnnouncementExclusive, setSelectedAnnouncementExclusive] = useState<string>("");
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [showEmployeeModal, setShowEmployeeModal] = useState(false);
@@ -134,8 +133,8 @@ export const AnnouncementsManager = () => {
   };
 
   const filteredAnnouncements = announcements.filter(announcement =>
-    announcement.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    announcement.category.toLowerCase().includes(searchTerm.toLowerCase())
+    announcement.title.toLowerCase().includes("") ||
+    announcement.category.toLowerCase().includes("")
   );
 
   const GeneralNoticesContent = () => (
@@ -148,23 +147,14 @@ export const AnnouncementsManager = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Search and Select */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input
-                placeholder="Buscar um aviso/anúncio..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+          {/* Select with search */}
+          <div>
             <Select value={selectedAnnouncement} onValueChange={setSelectedAnnouncement}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione um aviso para tocar" />
+                <SelectValue placeholder="Buscar e selecionar um aviso..." />
               </SelectTrigger>
               <SelectContent>
-                {filteredAnnouncements.map((announcement) => (
+                {announcements.map((announcement) => (
                   <SelectItem key={announcement.id} value={announcement.id}>
                     <div className="flex items-center justify-between w-full">
                       <span>{announcement.title}</span>
@@ -177,6 +167,29 @@ export const AnnouncementsManager = () => {
               </SelectContent>
             </Select>
           </div>
+
+          {/* Selected announcement preview */}
+          {selectedAnnouncement && (
+            <div className="p-3 bg-accent/10 rounded-lg border">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">
+                    {announcements.find(a => a.id === selectedAnnouncement)?.title}
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {announcements.find(a => a.id === selectedAnnouncement)?.category}
+                  </p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => togglePlay(selectedAnnouncement)}
+                >
+                  {playingId === selectedAnnouncement ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                </Button>
+              </div>
+            </div>
+          )}
 
           {/* Scheduled General Announcements */}
           <div className="space-y-3">
@@ -270,23 +283,14 @@ export const AnnouncementsManager = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Search and Select */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input
-                placeholder="Buscar um aviso/anúncio..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Select value={selectedAnnouncement} onValueChange={setSelectedAnnouncement}>
+          {/* Select with search */}
+          <div>
+            <Select value={selectedAnnouncementExclusive} onValueChange={setSelectedAnnouncementExclusive}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione um aviso para tocar" />
+                <SelectValue placeholder="Buscar e selecionar um aviso..." />
               </SelectTrigger>
               <SelectContent>
-                {filteredAnnouncements.map((announcement) => (
+                {announcements.map((announcement) => (
                   <SelectItem key={announcement.id} value={announcement.id}>
                     <div className="flex items-center justify-between w-full">
                       <span>{announcement.title}</span>
@@ -299,6 +303,29 @@ export const AnnouncementsManager = () => {
               </SelectContent>
             </Select>
           </div>
+
+          {/* Selected announcement preview */}
+          {selectedAnnouncementExclusive && (
+            <div className="p-3 bg-accent/10 rounded-lg border">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-medium">
+                    {announcements.find(a => a.id === selectedAnnouncementExclusive)?.title}
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    {announcements.find(a => a.id === selectedAnnouncementExclusive)?.category}
+                  </p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => togglePlay(selectedAnnouncementExclusive)}
+                >
+                  {playingId === selectedAnnouncementExclusive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                </Button>
+              </div>
+            </div>
+          )}
 
           {/* Scheduled Exclusive Announcements */}
           <div className="space-y-3">
@@ -395,10 +422,22 @@ export const AnnouncementsManager = () => {
 
       <Tabs defaultValue="avisos-gerais" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="avisos-gerais">Avisos Gerais</TabsTrigger>
-          <TabsTrigger value="avisos-exclusivos">Avisos Exclusivos</TabsTrigger>
-          <TabsTrigger value="funcionarios">Funcionários</TabsTrigger>
-          <TabsTrigger value="veiculos">Veículos</TabsTrigger>
+          <TabsTrigger value="avisos-gerais" className="flex items-center space-x-2">
+            <Volume2 className="w-4 h-4" />
+            <span>Avisos Gerais</span>
+          </TabsTrigger>
+          <TabsTrigger value="avisos-exclusivos" className="flex items-center space-x-2">
+            <RadioIcon className="w-4 h-4" />
+            <span>Avisos Exclusivos</span>
+          </TabsTrigger>
+          <TabsTrigger value="funcionarios" className="flex items-center space-x-2">
+            <Users className="w-4 h-4" />
+            <span>Funcionários</span>
+          </TabsTrigger>
+          <TabsTrigger value="veiculos" className="flex items-center space-x-2">
+            <Car className="w-4 h-4" />
+            <span>Veículos</span>
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="avisos-gerais" className="mt-6">
@@ -430,14 +469,15 @@ export const AnnouncementsManager = () => {
                 </Button>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                 <div>
                   <label className="text-sm font-medium mb-2 block">Frase Início</label>
                   <Select>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione..." />
+                      <SelectValue placeholder="Atenção..." />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="atencao">Atenção</SelectItem>
                       <SelectItem value="chamando">Chamando</SelectItem>
                       <SelectItem value="procuramos">Procuramos</SelectItem>
                     </SelectContent>
@@ -448,11 +488,12 @@ export const AnnouncementsManager = () => {
                   <label className="text-sm font-medium mb-2 block">Nome</label>
                   <Select>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione..." />
+                      <SelectValue placeholder="Nome da pessoa..." />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="joao">João Silva</SelectItem>
                       <SelectItem value="maria">Maria Santos</SelectItem>
+                      <SelectItem value="pedro">Pedro Oliveira</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -461,17 +502,30 @@ export const AnnouncementsManager = () => {
                   <label className="text-sm font-medium mb-2 block">Tipo de Chamada</label>
                   <Select>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione..." />
+                      <SelectValue placeholder="Telefone ramal..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="urgente">Urgente</SelectItem>
-                      <SelectItem value="normal">Normal</SelectItem>
+                      <SelectItem value="telefone1">Telefone ramal 1</SelectItem>
+                      <SelectItem value="telefone2">Telefone ramal 2</SelectItem>
+                      <SelectItem value="recepcao">Recepção</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 
                 <div>
                   <label className="text-sm font-medium mb-2 block">Prioridade</label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Normal..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="normal">Normal</SelectItem>
+                      <SelectItem value="urgente">Urgente</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
                   <Button className="w-full">
                     <Play className="w-4 h-4 mr-2" />
                     Tocar

@@ -45,7 +45,7 @@ export const VehicleManager = () => {
             <label className="text-sm font-medium mb-2 block">Modelo</label>
             <Select value={vehicleModel} onValueChange={setVehicleModel}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione o modelo" />
+                <SelectValue placeholder="Buscar modelo..." />
               </SelectTrigger>
               <SelectContent>
                 {vehicleModels.map((model) => (
@@ -61,7 +61,7 @@ export const VehicleManager = () => {
             <label className="text-sm font-medium mb-2 block">Cor</label>
             <Select value={vehicleColor} onValueChange={setVehicleColor}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione a cor" />
+                <SelectValue placeholder="Buscar cor..." />
               </SelectTrigger>
               <SelectContent>
                 {vehicleColors.map((color) => (
@@ -82,9 +82,6 @@ export const VehicleManager = () => {
               maxLength={7}
               className="uppercase"
             />
-            <p className="text-xs text-muted-foreground mt-1">
-              7 caracteres (letras e números)
-            </p>
           </div>
           
           <div>
