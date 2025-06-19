@@ -14,12 +14,10 @@ import { VirtualVoiceManager } from "@/components/VirtualVoiceManager";
 import { Header } from "@/components/Header";
 import { Player } from "@/components/Player";
 import { SuggestionsModal } from "@/components/SuggestionsModal";
-import { VirtualTour } from "@/components/VirtualTour";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("playlists");
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [showTour, setShowTour] = useState(false);
   const [selectedColor, setSelectedColor] = useState("blue");
 
   const colorThemes = {
@@ -91,11 +89,7 @@ const Index = () => {
 
   return (
     <div className="h-screen bg-gradient-to-br from-background via-background to-secondary/20 overflow-hidden flex flex-col">
-      <Header 
-        selectedColor={selectedColor} 
-        setSelectedColor={setSelectedColor}
-        onStartTour={() => setShowTour(true)}
-      />
+      <Header selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
       
       {/* Main content area with fixed header and footer */}
       <div className="flex-1 flex flex-col pt-16 pb-24 overflow-hidden">
@@ -103,10 +97,7 @@ const Index = () => {
         <ScrollArea className="flex-1">
           <div className="pb-8">
             {/* Radio Banner - now scrollable */}
-            <div 
-              data-tour="logo"
-              className={`relative h-32 bg-gradient-to-r ${colorThemes[selectedColor].gradient} overflow-hidden`}
-            >
+            <div className={`relative h-32 bg-gradient-to-r ${colorThemes[selectedColor].gradient} overflow-hidden`}>
               <div className="absolute inset-0 bg-black/20"></div>
               <div className="relative z-10 h-full flex items-center justify-between px-4">
                 <div className="flex items-center space-x-4 text-white">
@@ -128,10 +119,7 @@ const Index = () => {
             
             <div className="px-4 pt-8">
               {/* Navigation Tabs */}
-              <div 
-                data-tour="tabs"
-                className="flex flex-wrap gap-2 mb-6 p-1 bg-card/50 rounded-lg border border-border/40"
-              >
+              <div className="flex flex-wrap gap-2 mb-6 p-1 bg-card/50 rounded-lg border border-border/40">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   return (
@@ -165,7 +153,6 @@ const Index = () => {
 
       {/* Floating Suggestions Button */}
       <Button 
-        data-tour="suggestions"
         onClick={() => setShowSuggestions(true)}
         className={`fixed bottom-28 right-6 z-40 rounded-full w-14 h-14 shadow-lg ${colorThemes[selectedColor].button} text-white`}
         size="icon"
@@ -173,18 +160,10 @@ const Index = () => {
         <MessageSquare className="w-6 h-6" />
       </Button>
 
-      <div data-tour="player">
-        <Player />
-      </div>
-      
+      <Player />
       <SuggestionsModal 
         isOpen={showSuggestions} 
         onClose={() => setShowSuggestions(false)} 
-      />
-      
-      <VirtualTour 
-        isOpen={showTour} 
-        onClose={() => setShowTour(false)} 
       />
     </div>
   );
