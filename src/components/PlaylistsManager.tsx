@@ -37,7 +37,7 @@ export const PlaylistsManager = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="border-border/40">
+      <Card className="border-border/60">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-foreground">
             <Music className="w-5 h-5" />
@@ -67,7 +67,7 @@ export const PlaylistsManager = () => {
                 className={`border-2 transition-all duration-200 cursor-pointer hover:shadow-lg ${
                   selectedPlaylists.includes(genre.id) 
                     ? 'border-primary bg-primary/10 shadow-md' 
-                    : 'border-border/40 hover:border-primary/50 bg-card/60 hover:bg-card shadow-sm'
+                    : 'border-border/80 hover:border-primary/50 bg-card/60 hover:bg-card shadow-sm'
                 }`}
                 onClick={() => handlePlaylistToggle(genre.id)}
               >
