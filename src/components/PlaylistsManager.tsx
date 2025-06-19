@@ -50,6 +50,7 @@ export const PlaylistsManager = () => {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [activeDay, setActiveDay] = useState("padrao");
+  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({});
 
   const { data: playlists = [], isLoading } = useQuery({
     queryKey: ['playlists'],
@@ -108,6 +109,13 @@ export const PlaylistsManager = () => {
     return Object.entries(selectedPlaylists)
       .filter(([_, playlists]) => playlists.includes(playlistId))
       .map(([day, _]) => day);
+  };
+
+  const handleDropdownOpenChange = (playlistId: string, isOpen: boolean) => {
+    setOpenDropdowns(prev => ({
+      ...prev,
+      [playlistId]: isOpen
+    }));
   };
 
   // Initialize selected playlists from API data
@@ -226,14 +234,27 @@ export const PlaylistsManager = () => {
                                 </div>
                                 
                                 {/* Dropdown Menu */}
-                                <DropdownMenu>
+                                <DropdownMenu 
+                                  open={openDropdowns[playlist.id] || false}
+                                  onOpenChange={(isOpen) => handleDropdownOpenChange(playlist.id, isOpen)}
+                                >
                                   <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                                     <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-accent">
                                       <span className="sr-only">Abrir menu</span>
                                       <MoreHorizontal className="h-4 w-4" />
                                     </Button>
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end" className="w-56 bg-popover border">
+                                  <DropdownMenuContent 
+                                    align="end" 
+                                    className="w-56 bg-popover border z-50"
+                                    onPointerDownOutside={(e) => {
+                                      // Não fechar se o clique for dentro do próprio dropdown
+                                      const target = e.target as Element;
+                                      if (target.closest('[data-radix-popper-content-wrapper]')) {
+                                        e.preventDefault();
+                                      }
+                                    }}
+                                  >
                                     <DropdownMenuLabel>Replicar para:</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     {daysOfWeek
@@ -243,6 +264,7 @@ export const PlaylistsManager = () => {
                                           key={targetDay.id}
                                           onClick={(e) => {
                                             e.stopPropagation();
+                                            e.preventDefault();
                                             replicateToDay(playlist.id, targetDay.id);
                                           }}
                                           className="cursor-pointer"
@@ -260,6 +282,7 @@ export const PlaylistsManager = () => {
                                         <DropdownMenuItem
                                           onClick={(e) => {
                                             e.stopPropagation();
+                                            e.preventDefault();
                                             daysOfWeek.filter(d => d.id !== 'padrao').forEach(targetDay => {
                                               replicateToDay(playlist.id, targetDay.id);
                                             });
@@ -277,7 +300,9 @@ export const PlaylistsManager = () => {
                                         <DropdownMenuItem
                                           onClick={(e) => {
                                             e.stopPropagation();
+                                            e.preventDefault();
                                             removeFromAllDays(playlist.id);
+                                            handleDropdownOpenChange(playlist.id, false);
                                           }}
                                           className="cursor-pointer text-destructive"
                                         >
@@ -286,6 +311,17 @@ export const PlaylistsManager = () => {
                                         </DropdownMenuItem>
                                       </>
                                     )}
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        handleDropdownOpenChange(playlist.id, false);
+                                      }}
+                                      className="cursor-pointer text-muted-foreground"
+                                    >
+                                      Fechar menu
+                                    </DropdownMenuItem>
                                   </DropdownMenuContent>
                                 </DropdownMenu>
                               </div>
@@ -307,8 +343,8 @@ export const PlaylistsManager = () => {
                                 <span>{playlist.duration}</span>
                               </div>
                               
-                              {/* Indicador de dias ativos */}
-                              {playlistDays.length > 1 && (
+                              {/* Indicador de dias ativos - mostra apenas se a playlist está em outros dias */}
+                              {playlistDays.length > 0 && (
                                 <div className="mt-2">
                                   <div className="flex flex-wrap gap-1">
                                     {playlistDays.map(dayId => {
@@ -316,7 +352,11 @@ export const PlaylistsManager = () => {
                                       return (
                                         <span 
                                           key={dayId}
-                                          className="text-xs bg-primary/20 text-primary px-2 py-1 rounded"
+                                          className={`text-xs px-2 py-1 rounded ${
+                                            dayId === activeDay 
+                                              ? 'bg-primary text-primary-foreground' 
+                                              : 'bg-primary/20 text-primary'
+                                          }`}
                                         >
                                           {dayLabel}
                                         </span>
