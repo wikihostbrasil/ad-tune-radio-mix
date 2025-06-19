@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Volume2, RadioIcon, Users, Car } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,41 +15,42 @@ interface Announcement {
 }
 
 export const AnnouncementsManager = () => {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([
+    {
+      id: "1",
+      title: "Promoção Supermercado Central",
+      category: "Comercial",
+      duration: "0:30",
+      type: "comercial",
+    },
+    {
+      id: "2",
+      title: "Campanha Doe Sangue",
+      category: "Institucional",
+      duration: "0:20",
+      type: "institucional",
+    },
+    {
+      id: "3",
+      title: "Show de Rock - Sábado",
+      category: "Eventos",
+      duration: "0:15",
+      type: "promocional",
+    },
+  ]);
 
-  // Load announcements from API
+  // Load announcements from API as enhancement, but don't block loading
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
         const response = await fetch('/api/announcements.json');
-        const data: Announcement[] = await response.json();
-        setAnnouncements(data);
+        if (response.ok) {
+          const data: Announcement[] = await response.json();
+          setAnnouncements(data);
+        }
       } catch (error) {
-        console.error('Erro ao carregar anúncios:', error);
-        // Fallback data
-        setAnnouncements([
-          {
-            id: "1",
-            title: "Promoção Supermercado Central",
-            category: "Comercial",
-            duration: "0:30",
-            type: "comercial",
-          },
-          {
-            id: "2",
-            title: "Campanha Doe Sangue",
-            category: "Institucional",
-            duration: "0:20",
-            type: "institucional",
-          },
-          {
-            id: "3",
-            title: "Show de Rock - Sábado",
-            category: "Eventos",
-            duration: "0:15",
-            type: "promocional",
-          },
-        ]);
+        console.log('Using fallback announcements data');
+        // Keep fallback data that was already set in useState
       }
     };
 
