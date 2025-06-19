@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { ChevronUp, ChevronDown, Plus, Trash2, Check, ChevronUpDown } from "lucide-react";
+import { ChevronUp, ChevronDown, Plus, Trash2, Check, ChevronsUpDown } from "lucide-react";
 import { Play, Pause, RadioIcon, Volume2, Users, Car } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -217,7 +217,7 @@ export const AnnouncementsManager = () => {
                     placeholder="Buscar e selecionar um aviso..."
                   />
                   <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                    <ChevronUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                    <ChevronsUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
                   </Combobox.Button>
                 </div>
                 <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-popover border border-border py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
@@ -320,7 +320,7 @@ export const AnnouncementsManager = () => {
                           placeholder="Selecione o aviso"
                         />
                         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                          <ChevronUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                          <ChevronsUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
                         </Combobox.Button>
                       </div>
                       <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-popover border border-border py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
@@ -430,7 +430,7 @@ export const AnnouncementsManager = () => {
                     placeholder="Buscar e selecionar um aviso..."
                   />
                   <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                    <ChevronUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                    <ChevronsUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
                   </Combobox.Button>
                 </div>
                 <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-popover border border-border py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
@@ -533,7 +533,7 @@ export const AnnouncementsManager = () => {
                           placeholder="Selecione o aviso"
                         />
                         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                          <ChevronUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                          <ChevronsUpDown className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
                         </Combobox.Button>
                       </div>
                       <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-popover border border-border py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
