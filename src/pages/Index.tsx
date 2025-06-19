@@ -65,7 +65,7 @@ const Index = () => {
       {/* Radio Banner */}
       <div className="relative h-32 bg-gradient-to-r from-blue-600 to-blue-800 overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="container mx-auto p-4 lg:p-6 relative z-10 h-full flex items-center">
+        <div className="relative z-10 h-full flex items-center px-4">
           <div className="text-white">
             <h1 className="text-3xl font-bold">Rádio Mix FM</h1>
             <p className="text-blue-100 mt-1">
@@ -76,7 +76,7 @@ const Index = () => {
         </div>
       </div>
       
-      <div className="container mx-auto p-4 lg:p-6 pt-8">
+      <div className="px-4 pt-8">
         {/* Navigation Tabs */}
         <div className="flex flex-wrap gap-2 mb-6 p-1 bg-card/50 rounded-lg border border-border/40">
           {tabs.map((tab) => {
