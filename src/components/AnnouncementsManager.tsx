@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ChevronUp, ChevronDown, Plus, Trash2 } from "lucide-react";
-import { Play, Pause, RadioIcon, Volume2, Users, Car, Check, ChevronUpDown } from "lucide-react";
+import { Play, Pause, RadioIcon, Volume2, Users, Car, Check, ChevronsUpDown } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmployeeManagementModal } from "@/components/EmployeeManagementModal";
@@ -195,7 +195,7 @@ export const AnnouncementsManager = () => {
                       placeholder="Buscar e selecionar um aviso..."
                     />
                     <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                      <ChevronUpDown className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                      <ChevronsUpDown className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                     </Combobox.Button>
                   </div>
                   <Combobox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-popover border border-border py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
