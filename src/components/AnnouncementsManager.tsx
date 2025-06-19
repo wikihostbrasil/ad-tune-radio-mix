@@ -1,24 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { Volume2, RadioIcon, Users, Car } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-// Import components - adding error boundaries
-let GeneralNotices, ExclusiveNotices, EmployeesTab, VehiclesTab;
-
-try {
-  ({ GeneralNotices } = require("@/components/announcements/GeneralNotices"));
-  ({ ExclusiveNotices } = require("@/components/announcements/ExclusiveNotices"));
-  ({ EmployeesTab } = require("@/components/announcements/EmployeesTab"));
-  ({ VehiclesTab } = require("@/components/announcements/VehiclesTab"));
-} catch (error) {
-  console.error("Error importing announcement components:", error);
-  // Fallback components
-  GeneralNotices = () => <div>Carregando Avisos Gerais...</div>;
-  ExclusiveNotices = () => <div>Carregando Avisos Exclusivos...</div>;
-  EmployeesTab = () => <div>Carregando Funcionários...</div>;
-  VehiclesTab = () => <div>Carregando Veículos...</div>;
-}
+import { GeneralNotices } from "@/components/announcements/GeneralNotices";
+import { ExclusiveNotices } from "@/components/announcements/ExclusiveNotices";
+import { EmployeesTab } from "@/components/announcements/EmployeesTab";
+import { VehiclesTab } from "@/components/announcements/VehiclesTab";
 
 interface Announcement {
   id: string;
