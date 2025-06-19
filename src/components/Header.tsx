@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { RadioIcon, User, Settings, Lock, LogOut, Sun, Moon, Code, ArrowUp, Bell, Palette } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { ProfileModal } from "@/components/ProfileModal";
 import { PasswordModal } from "@/components/PasswordModal";
 import { ConfigurationsModal } from "@/components/ConfigurationsModal";
+import { VehicleManager } from "@/components/VehicleManager";
 import { useLogo } from "@/hooks/useLogo";
 
 interface HeaderProps {
@@ -29,6 +29,8 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
   const [showProfile, setShowProfile] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfigurations, setShowConfigurations] = useState(false);
+  const [showVehicleManager, setShowVehicleManager] = useState(false);
+  const [isVehiclePlaying, setIsVehiclePlaying] = useState(false);
   const { logoUrl } = useLogo();
   const navigate = useNavigate();
 
@@ -58,6 +60,10 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
 
   const handleDevelopersClick = () => {
     navigate('/developers');
+  };
+
+  const handleVehiclePlayToggle = () => {
+    setIsVehiclePlaying(!isVehiclePlaying);
   };
 
   return (
@@ -231,6 +237,12 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
       <ProfileModal isOpen={showProfile} onClose={() => setShowProfile(false)} />
       <PasswordModal isOpen={showPassword} onClose={() => setShowPassword(false)} />
       <ConfigurationsModal isOpen={showConfigurations} onClose={() => setShowConfigurations(false)} />
+      {showVehicleManager && (
+        <VehicleManager 
+          onPlayToggle={handleVehiclePlayToggle}
+          isPlaying={isVehiclePlaying}
+        />
+      )}
     </TooltipProvider>
   );
 };
