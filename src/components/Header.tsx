@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { RadioIcon, User, Settings, Lock, LogOut, Sun, Moon, Code, ArrowUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -16,12 +15,14 @@ import { useNavigate } from "react-router-dom";
 import { ProfileModal } from "@/components/ProfileModal";
 import { PasswordModal } from "@/components/PasswordModal";
 import { ConfigurationsModal } from "@/components/ConfigurationsModal";
+import { useLogo } from "@/hooks/useLogo";
 
 export const Header = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [showProfile, setShowProfile] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfigurations, setShowConfigurations] = useState(false);
+  const { logoUrl } = useLogo();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,8 +59,18 @@ export const Header = () => {
         <div className="container mx-auto h-full flex items-center justify-between px-4 lg:px-6">
           {/* Logo e Nome da Rádio */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-              <RadioIcon className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+              <img 
+                src={logoUrl} 
+                alt="Logo" 
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  target.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <RadioIcon className="w-5 h-5 text-white hidden" />
             </div>
             <div>
               <h1 className="text-lg font-bold text-foreground">Rádio Mix FM</h1>

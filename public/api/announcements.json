@@ -1,0 +1,31 @@
+
+[
+  {
+    "id": "1",
+    "title": "Promoção Supermercado Central",
+    "category": "Comercial",
+    "duration": "0:30",
+    "type": "comercial"
+  },
+  {
+    "id": "2",
+    "title": "Campanha Doe Sangue",
+    "category": "Institucional", 
+    "duration": "0:20",
+    "type": "institucional"
+  },
+  {
+    "id": "3",
+    "title": "Show de Rock - Sábado",
+    "category": "Eventos",
+    "duration": "0:15",
+    "type": "promocional"
+  },
+  {
+    "id": "4",
+    "title": "Farmácia Popular",
+    "category": "Comercial",
+    "duration": "0:25",
+    "type": "comercial"
+  }
+]

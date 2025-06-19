@@ -1,0 +1,30 @@
+
+[
+  {
+    "id": "1",
+    "name": "Hits Brasileiros",
+    "category": "Minhas Playlists",
+    "tracks": 150,
+    "duration": "10h 30m",
+    "selected": true,
+    "dayOfWeek": "Padrão"
+  },
+  {
+    "id": "2", 
+    "name": "Rock Nacional",
+    "category": "O Melhor do Rock",
+    "tracks": 200,
+    "duration": "13h 45m",
+    "selected": false,
+    "dayOfWeek": "Padrão"
+  },
+  {
+    "id": "3",
+    "name": "Sertanejo Atual",
+    "category": "Sertanejo",
+    "tracks": 180,
+    "duration": "12h 15m", 
+    "selected": true,
+    "dayOfWeek": "Padrão"
+  }
+]

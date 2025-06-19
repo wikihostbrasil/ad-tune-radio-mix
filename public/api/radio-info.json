@@ -1,0 +1,13 @@
+
+{
+  "name": "Rádio Mix FM",
+  "frequency": "95.7 FM",
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "currentTrack": {
+    "title": "Rock Clássico Mix",
+    "artist": "Tocando agora na Rádio Mix FM",
+    "duration": "4:32",
+    "currentTime": "2:15"
+  },
+  "isLive": true
+}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -27,40 +27,56 @@ export const AnnouncementsManager = () => {
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   
   const [scheduledGeneral, setScheduledGeneral] = useState<ScheduledAnnouncement[]>([]);
   const [scheduledExclusive, setScheduledExclusive] = useState<ScheduledAnnouncement[]>([]);
 
-  const announcements: Announcement[] = [
-    {
-      id: "1",
-      title: "Promoção Supermercado Central",
-      category: "Comercial",
-      duration: "0:30",
-      type: "comercial",
-    },
-    {
-      id: "2",
-      title: "Campanha Doe Sangue",
-      category: "Institucional",
-      duration: "0:20",
-      type: "institucional",
-    },
-    {
-      id: "3",
-      title: "Show de Rock - Sábado",
-      category: "Eventos",
-      duration: "0:15",
-      type: "promocional",
-    },
-    {
-      id: "4",
-      title: "Farmácia Popular",
-      category: "Comercial",
-      duration: "0:25",
-      type: "comercial",
-    },
-  ];
+  // Carregar anúncios da API
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await fetch('/api/announcements.json');
+        const data: Announcement[] = await response.json();
+        setAnnouncements(data);
+      } catch (error) {
+        console.error('Erro ao carregar anúncios:', error);
+        // Fallback para dados estáticos se a API falhar
+        setAnnouncements([
+          {
+            id: "1",
+            title: "Promoção Supermercado Central",
+            category: "Comercial",
+            duration: "0:30",
+            type: "comercial",
+          },
+          {
+            id: "2",
+            title: "Campanha Doe Sangue",
+            category: "Institucional",
+            duration: "0:20",
+            type: "institucional",
+          },
+          {
+            id: "3",
+            title: "Show de Rock - Sábado",
+            category: "Eventos",
+            duration: "0:15",
+            type: "promocional",
+          },
+          {
+            id: "4",
+            title: "Farmácia Popular",
+            category: "Comercial",
+            duration: "0:25",
+            type: "comercial",
+          },
+        ]);
+      }
+    };
+
+    fetchAnnouncements();
+  }, []);
 
   const categories = [
     {
@@ -152,7 +168,8 @@ export const AnnouncementsManager = () => {
   };
 
   const filteredAnnouncements = announcements.filter(announcement =>
-    announcement.title.toLowerCase().includes(searchTerm.toLowerCase())
+    announcement.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    announcement.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
