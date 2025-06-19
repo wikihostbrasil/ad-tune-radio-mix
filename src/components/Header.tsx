@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { RadioIcon, User, Settings, Lock, LogOut, Sun, Moon, Code, ArrowUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -61,16 +62,14 @@ export const Header = () => {
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
               <img 
-                src={logoUrl} 
+                src={logoUrl || "https://placehold.co/40x40/0066FF/FFFFFF?text=LOGO"} 
                 alt="Logo" 
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  target.nextElementSibling?.classList.remove('hidden');
+                  target.src = "https://placehold.co/40x40/0066FF/FFFFFF?text=LOGO";
                 }}
               />
-              <RadioIcon className="w-5 h-5 text-white hidden" />
             </div>
             <div>
               <h1 className="text-lg font-bold text-foreground">Rádio Mix FM</h1>
@@ -108,7 +107,7 @@ export const Header = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src="" alt="User" />
+                    <AvatarImage src="https://placehold.co/40x40/666666/FFFFFF?text=U" alt="User" />
                     <AvatarFallback className="bg-blue-500 text-white">
                       <User className="w-5 h-5" />
                     </AvatarFallback>

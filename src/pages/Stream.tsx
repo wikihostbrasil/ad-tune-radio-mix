@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { RadioIcon, Play, Pause, SkipBack, SkipForward, Volume2 } from "lucide-react";
+import { RadioIcon, Play, Pause, SkipBack, SkipForward, Volume2, Shuffle, Repeat } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useLogo } from "@/hooks/useLogo";
 
@@ -51,7 +51,7 @@ const Stream = () => {
         <div className="mb-8 flex flex-col items-center">
           <div className="w-40 h-40 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-6 shadow-2xl overflow-hidden">
             <img 
-              src="https://placehold.co/160x160/0066FF/FFFFFF?text=LOGO" 
+              src={logoUrl || "https://placehold.co/160x160/0066FF/FFFFFF?text=LOGO"} 
               alt="Logo" 
               className="w-32 h-32 object-contain rounded-full"
             />
@@ -61,90 +61,97 @@ const Stream = () => {
             Transmitindo ao vivo 24/7
           </p>
         </div>
+      </div>
 
-        {/* Progress Bar */}
-        <div className="w-full max-w-md mb-8">
-          <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
-            <span>{currentTrack.currentTime}</span>
-            <span>{currentTrack.duration}</span>
-          </div>
+      {/* Footer Player - Spotify Style */}
+      <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur border-t border-border">
+        {/* Progress Bar - Full Width at Top */}
+        <div className="w-full px-4 py-1">
           <Slider
             value={progress}
             onValueChange={setProgress}
             max={100}
             step={1}
-            className="w-full"
+            className="w-full h-1"
           />
         </div>
 
-        {/* Volume Control */}
-        <div className="w-full max-w-md mb-8">
-          <div className="flex items-center space-x-4">
-            <Volume2 className="w-5 h-5 text-muted-foreground" />
-            <Slider
-              value={volume}
-              onValueChange={setVolume}
-              max={100}
-              step={1}
-              className="flex-1"
-            />
-            <span className="text-sm text-muted-foreground w-8">{volume[0]}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer Player */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur border-t border-border p-4">
-        <div className="container mx-auto">
-          {/* Progress Bar */}
-          <div className="mb-4">
-            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-              <span>{currentTrack.currentTime}</span>
-              <span>{currentTrack.duration}</span>
+        <div className="container mx-auto h-20 px-4 lg:px-6">
+          <div className="flex items-center justify-between h-full">
+            
+            {/* Track Info */}
+            <div className="flex items-center space-x-3 min-w-0 w-1/4">
+              <div className="w-14 h-14 bg-secondary rounded-md flex items-center justify-center flex-shrink-0 overflow-hidden">
+                <img 
+                  src="https://placehold.co/56x56/0066FF/FFFFFF?text=♪" 
+                  alt="Album Cover" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-foreground truncate">{currentTrack.title}</p>
+                <p className="text-xs text-muted-foreground truncate">{currentTrack.artist}</p>
+              </div>
             </div>
-            <Slider
-              value={progress}
-              onValueChange={setProgress}
-              max={100}
-              step={1}
-              className="w-full"
-            />
-          </div>
 
-          <div className="flex items-center justify-center space-x-6">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-110"
-            >
-              <SkipBack className="w-5 h-5" />
-            </Button>
+            {/* Central Controls */}
+            <div className="flex flex-col items-center w-1/2">
+              <div className="flex items-center space-x-4 mb-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-110"
+                >
+                  <Shuffle className="w-4 h-4" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-110"
+                >
+                  <SkipBack className="w-5 h-5" />
+                </Button>
+                <Button 
+                  size="icon" 
+                  className="w-8 h-8 rounded-full bg-primary hover:bg-primary/90 transition-all duration-200 hover:scale-105"
+                  onClick={() => setIsPlaying(!isPlaying)}
+                >
+                  {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-110"
+                >
+                  <SkipForward className="w-5 h-5" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-110"
+                >
+                  <Repeat className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                <span>{currentTrack.currentTime}</span>
+                <span>•</span>
+                <span>{currentTrack.duration}</span>
+              </div>
+            </div>
 
-            <Button
-              onClick={() => setIsPlaying(!isPlaying)}
-              size="icon"
-              className={`w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white transition-all duration-200 hover:scale-105 ${isPlaying ? '' : 'animate-pulse'}`}
-            >
-              {isPlaying ? (
-                <Pause className="w-6 h-6" />
-              ) : (
-                <Play className="w-6 h-6" />
-              )}
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-110"
-            >
-              <SkipForward className="w-5 h-5" />
-            </Button>
-          </div>
-
-          <div className="text-center mt-2">
-            <p className="text-sm font-medium text-foreground">
-              {currentTrack.title} - {currentTrack.artist}
-            </p>
+            {/* Volume Control */}
+            <div className="flex items-center space-x-2 w-1/4 justify-end">
+              <Volume2 className="w-4 h-4 text-muted-foreground" />
+              <Slider
+                value={volume}
+                onValueChange={setVolume}
+                max={100}
+                step={1}
+                className="w-24"
+              />
+              <span className="text-xs text-muted-foreground w-8">{volume[0]}</span>
+            </div>
           </div>
         </div>
       </div>
