@@ -1,11 +1,12 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Play, Pause, RadioIcon, Clock, Volume2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ChevronUp, ChevronDown, Plus, Minus } from "lucide-react";
+import { Play, Pause, RadioIcon, Clock, Volume2, Search } from "lucide-react";
 
 interface Announcement {
   id: string;
@@ -15,9 +16,20 @@ interface Announcement {
   type: "comercial" | "institucional" | "promocional";
 }
 
+interface ScheduledAnnouncement {
+  id: string;
+  announcementId: string;
+  frequency: number;
+  type: "geral" | "exclusivo";
+}
+
 export const AnnouncementsManager = () => {
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [playingId, setPlayingId] = useState<string | null>(null);
+  
+  const [scheduledGeneral, setScheduledGeneral] = useState<ScheduledAnnouncement[]>([]);
+  const [scheduledExclusive, setScheduledExclusive] = useState<ScheduledAnnouncement[]>([]);
 
   const announcements: Announcement[] = [
     {
@@ -90,33 +102,97 @@ export const AnnouncementsManager = () => {
     }
   };
 
+  const addScheduledAnnouncement = (type: "geral" | "exclusivo") => {
+    const newScheduled: ScheduledAnnouncement = {
+      id: Date.now().toString(),
+      announcementId: "",
+      frequency: 5,
+      type,
+    };
+
+    if (type === "geral") {
+      setScheduledGeneral(prev => [...prev, newScheduled]);
+    } else {
+      setScheduledExclusive(prev => [...prev, newScheduled]);
+    }
+  };
+
+  const removeScheduledAnnouncement = (id: string, type: "geral" | "exclusivo") => {
+    if (type === "geral") {
+      setScheduledGeneral(prev => prev.filter(item => item.id !== id));
+    } else {
+      setScheduledExclusive(prev => prev.filter(item => item.id !== id));
+    }
+  };
+
+  const updateScheduledAnnouncement = (id: string, field: string, value: any, type: "geral" | "exclusivo") => {
+    const updateFn = (prev: ScheduledAnnouncement[]) => 
+      prev.map(item => item.id === id ? { ...item, [field]: value } : item);
+
+    if (type === "geral") {
+      setScheduledGeneral(updateFn);
+    } else {
+      setScheduledExclusive(updateFn);
+    }
+  };
+
+  const updateFrequency = (id: string, change: number, type: "geral" | "exclusivo") => {
+    const updateFn = (prev: ScheduledAnnouncement[]) =>
+      prev.map(item =>
+        item.id === id
+          ? { ...item, frequency: Math.max(1, Math.min(50, item.frequency + change)) }
+          : item
+      );
+
+    if (type === "geral") {
+      setScheduledGeneral(updateFn);
+    } else {
+      setScheduledExclusive(updateFn);
+    }
+  };
+
+  const filteredAnnouncements = announcements.filter(announcement =>
+    announcement.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Gerenciar Anúncios</h2>
+          <h2 className="text-2xl font-bold text-foreground">Gerenciar Avisos</h2>
           <p className="text-muted-foreground">
-            Organize e selecione anúncios para sua programação
+            Organize e configure seus avisos para programação automática
           </p>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Seletor de Avisos */}
+        {/* Avisos Gerais */}
         <Card className="border-border/40">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <Volume2 className="w-5 h-5 text-primary" />
-              <span>Seletor de Avisos</span>
+              <Volume2 className="w-5 h-5 text-blue-500" />
+              <span>Avisos Gerais</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Search Input */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input
+                placeholder="Buscar um aviso/anúncio..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+
             <Select value={selectedAnnouncement} onValueChange={setSelectedAnnouncement}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecione um aviso para tocar" />
               </SelectTrigger>
               <SelectContent>
-                {announcements.map((announcement) => (
+                {filteredAnnouncements.map((announcement) => (
                   <SelectItem key={announcement.id} value={announcement.id}>
                     <div className="flex items-center justify-between w-full">
                       <span>{announcement.title}</span>
@@ -129,101 +205,153 @@ export const AnnouncementsManager = () => {
               </SelectContent>
             </Select>
 
-            {selectedAnnouncement && (
-              <div className="p-4 bg-accent/20 rounded-lg border border-accent/30">
-                {(() => {
-                  const selected = announcements.find(a => a.id === selectedAnnouncement);
-                  return selected ? (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-lg radio-gradient flex items-center justify-center">
-                          <RadioIcon className="w-5 h-5 text-white" />
-                        </div>
-                        <div>
-                          <p className="font-medium">{selected.title}</p>
-                          <div className="flex items-center space-x-2 mt-1">
-                            <Badge className={getTypeColor(selected.type)}>
-                              {selected.category}
-                            </Badge>
-                            <Badge variant="outline" className="text-xs">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {selected.duration}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                      <Button
-                        onClick={() => togglePlay(selected.id)}
-                        className="spotify-gradient hover:opacity-90 text-black"
-                      >
-                        {playingId === selected.id ? (
-                          <Pause className="w-4 h-4" />
-                        ) : (
-                          <Play className="w-4 h-4" />
-                        )}
-                      </Button>
-                    </div>
-                  ) : null;
-                })()}
+            {/* Scheduled General Announcements */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">Programe seus anúncios gerais:</p>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => addScheduledAnnouncement("geral")}
+                >
+                  <Plus className="w-4 h-4" />
+                </Button>
               </div>
-            )}
+
+              {scheduledGeneral.map((scheduled) => (
+                <div key={scheduled.id} className="flex items-center space-x-2 p-3 bg-accent/10 rounded-lg border">
+                  <Select 
+                    value={scheduled.announcementId} 
+                    onValueChange={(value) => updateScheduledAnnouncement(scheduled.id, "announcementId", value, "geral")}
+                  >
+                    <SelectTrigger className="flex-1">
+                      <SelectValue placeholder="Selecione o aviso" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {announcements.map((announcement) => (
+                        <SelectItem key={announcement.id} value={announcement.id}>
+                          {announcement.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <span className="text-sm">tocar a cada</span>
+
+                  <div className="flex items-center space-x-1">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => updateFrequency(scheduled.id, -1, "geral")}
+                      className="w-8 h-8 p-0"
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
+                    <div className="w-12 h-8 bg-muted rounded flex items-center justify-center">
+                      <span className="text-sm font-medium">{scheduled.frequency}</span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => updateFrequency(scheduled.id, 1, "geral")}
+                      className="w-8 h-8 p-0"
+                    >
+                      <ChevronUp className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  <span className="text-sm">músicas</span>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeScheduledAnnouncement(scheduled.id, "geral")}
+                    className="text-destructive hover:text-destructive"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
-        {/* Biblioteca de Anúncios */}
+        {/* Avisos Exclusivos */}
         <Card className="border-border/40">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <RadioIcon className="w-5 h-5 text-accent" />
-              <span>Biblioteca de Anúncios</span>
+              <span>Avisos Exclusivos</span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <Accordion type="single" collapsible className="w-full">
-              {categories.map((category, index) => (
-                <AccordionItem key={category.name} value={`item-${index}`}>
-                  <AccordionTrigger className="hover:no-underline">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-3 h-3 rounded-full ${category.color}`}></div>
-                      <span>{category.name}</span>
-                      <Badge variant="secondary">{category.items.length}</Badge>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2 pt-2">
-                      {category.items.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center justify-between p-3 bg-accent/10 rounded-lg border border-accent/20 hover:bg-accent/20 transition-colors"
-                        >
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 rounded bg-accent/30 flex items-center justify-center">
-                              <RadioIcon className="w-4 h-4 text-accent" />
-                            </div>
-                            <div>
-                              <p className="font-medium text-sm">{item.title}</p>
-                              <p className="text-xs text-muted-foreground">{item.duration}</p>
-                            </div>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => togglePlay(item.id)}
-                            className="hover:bg-accent/30"
-                          >
-                            {playingId === item.id ? (
-                              <Pause className="w-4 h-4" />
-                            ) : (
-                              <Play className="w-4 h-4" />
-                            )}
-                          </Button>
-                        </div>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">Programe seus anúncios exclusivos:</p>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => addScheduledAnnouncement("exclusivo")}
+                >
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </div>
+
+              {scheduledExclusive.map((scheduled) => (
+                <div key={scheduled.id} className="flex items-center space-x-2 p-3 bg-accent/10 rounded-lg border">
+                  <Select 
+                    value={scheduled.announcementId} 
+                    onValueChange={(value) => updateScheduledAnnouncement(scheduled.id, "announcementId", value, "exclusivo")}
+                  >
+                    <SelectTrigger className="flex-1">
+                      <SelectValue placeholder="Selecione o aviso" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {announcements.map((announcement) => (
+                        <SelectItem key={announcement.id} value={announcement.id}>
+                          {announcement.title}
+                        </SelectItem>
                       ))}
+                    </SelectContent>
+                  </Select>
+
+                  <span className="text-sm">tocar a cada</span>
+
+                  <div className="flex items-center space-x-1">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => updateFrequency(scheduled.id, -1, "exclusivo")}
+                      className="w-8 h-8 p-0"
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
+                    <div className="w-12 h-8 bg-muted rounded flex items-center justify-center">
+                      <span className="text-sm font-medium">{scheduled.frequency}</span>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => updateFrequency(scheduled.id, 1, "exclusivo")}
+                      className="w-8 h-8 p-0"
+                    >
+                      <ChevronUp className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  <span className="text-sm">músicas</span>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeScheduledAnnouncement(scheduled.id, "exclusivo")}
+                    className="text-destructive hover:text-destructive"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                </div>
               ))}
-            </Accordion>
+            </div>
           </CardContent>
         </Card>
       </div>
