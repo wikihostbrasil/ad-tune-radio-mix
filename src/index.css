@@ -7,83 +7,95 @@
 
 @layer base {
   :root {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
+    /* Dark Mode Colors */
+    --background: 210 17% 11%; /* #1C1C1E */
+    --foreground: 0 0% 100%; /* #FFFFFF */
 
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 98%;
+    --card: 210 10% 18%; /* #2C2C2E */
+    --card-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 210 10% 18%; /* #2C2C2E */
+    --popover-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --primary: 214 100% 60%;
-    --primary-foreground: 0 0% 0%;
+    --primary: 213 100% 52%; /* #0A84FF - Azul primário modo escuro */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 210 10% 20%; /* Cards/superfície mais escura */
+    --secondary-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 210 10% 33%; /* #555555 - Desativado */
+    --muted-foreground: 0 0% 67%; /* #AAAAAA - Texto secundário */
 
-    --accent: 214 100% 60%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 213 100% 52%; /* #0A84FF */
+    --accent-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 4 100% 60%; /* #FF453A - Erro */
+    --destructive-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --border: 0 0% 16%;
-    --input: 0 0% 16%;
-    --ring: 214 100% 60%;
+    --border: 0 0% 20%; /* #333333 */
+    --input: 0 0% 20%; /* #333333 */
+    --ring: 213 100% 52%; /* #0A84FF */
+
+    --success: 142 76% 51%; /* #30D158 - Verde sucesso */
+    --warning: 48 100% 52%; /* #FFD60A - Amarelo aviso */
+    --disabled: 0 0% 33%; /* #555555 */
+    --hover-bg: 210 10% 25%; /* Hover background escuro */
 
     --radius: 12px;
 
-    --sidebar-background: 0 0% 2%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 214 100% 60%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 0 0% 7%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 16%;
-    --sidebar-ring: 214 100% 60%;
+    --sidebar-background: 210 17% 8%; /* Mais escuro que background */
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 213 100% 52%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 10% 18%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 213 100% 52%;
   }
 
   .light {
-    --background: 0 0% 98%;
-    --foreground: 222.2 84% 4.9%;
+    /* Light Mode Colors */
+    --background: 216 17% 93%; /* #EAECEF */
+    --foreground: 0 0% 20%; /* #333333 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 0 0% 20%; /* #333333 */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%; /* #FFFFFF */
+    --popover-foreground: 0 0% 20%; /* #333333 */
 
-    --primary: 214 100% 50%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 212 100% 50%; /* #007AFF - Azul primário modo claro */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --secondary: 210 40% 94%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 216 12% 95%; /* #F2F3F5 - Hover background */
+    --secondary-foreground: 0 0% 20%; /* #333333 */
 
-    --muted: 210 40% 94%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 80%; /* #CCCCCC - Desativado */
+    --muted-foreground: 0 0% 40%; /* #666666 - Texto secundário */
 
-    --accent: 214 100% 50%;
-    --accent-foreground: 222.2 84% 4.9%;
+    --accent: 212 100% 50%; /* #007AFF */
+    --accent-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 4 100% 58%; /* #FF3B30 - Erro */
+    --destructive-foreground: 0 0% 100%; /* #FFFFFF */
 
-    --border: 214.3 31.8% 88%;
-    --input: 214.3 31.8% 88%;
-    --ring: 214 100% 50%;
+    --border: 0 0% 87%; /* #DDDDDD */
+    --input: 0 0% 87%; /* #DDDDDD */
+    --ring: 212 100% 65%; /* #66AFFF - Hover/focus */
 
-    --sidebar-background: 0 0% 96%;
-    --sidebar-foreground: 222.2 84% 4.9%;
-    --sidebar-primary: 214 100% 50%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 210 40% 94%;
-    --sidebar-accent-foreground: 222.2 84% 4.9%;
-    --sidebar-border: 214.3 31.8% 88%;
-    --sidebar-ring: 214 100% 50%;
+    --success: 142 71% 45%; /* #34C759 - Verde sucesso */
+    --warning: 45 100% 50%; /* #FFCC00 - Amarelo aviso */
+    --disabled: 0 0% 80%; /* #CCCCCC */
+    --hover-bg: 216 12% 95%; /* #F2F3F5 */
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 212 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 216 12% 95%;
+    --sidebar-accent-foreground: 0 0% 20%;
+    --sidebar-border: 0 0% 87%;
+    --sidebar-ring: 212 100% 50%;
   }
 }
 
@@ -100,11 +112,11 @@
 
 @layer components {
   .spotify-gradient {
-    background: linear-gradient(135deg, #1db954 0%, #1ed760 100%);
+    background: linear-gradient(135deg, hsl(var(--success)) 0%, hsl(var(--success)) 100%);
   }
   
   .radio-gradient {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 100%);
   }
   
   .glass-effect {
@@ -114,6 +126,43 @@
 
   .animate-fade-in {
     animation: fadeIn 0.5s ease-in-out;
+  }
+
+  /* Utility classes for new colors */
+  .text-success {
+    color: hsl(var(--success));
+  }
+  
+  .text-warning {
+    color: hsl(var(--warning));
+  }
+  
+  .text-disabled {
+    color: hsl(var(--disabled));
+  }
+  
+  .bg-success {
+    background-color: hsl(var(--success));
+  }
+  
+  .bg-warning {
+    background-color: hsl(var(--warning));
+  }
+  
+  .bg-disabled {
+    background-color: hsl(var(--disabled));
+  }
+  
+  .bg-hover {
+    background-color: hsl(var(--hover-bg));
+  }
+  
+  .border-success {
+    border-color: hsl(var(--success));
+  }
+  
+  .border-warning {
+    border-color: hsl(var(--warning));
   }
 
   @keyframes fadeIn {
