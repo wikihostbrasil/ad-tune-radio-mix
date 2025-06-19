@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { RadioIcon, User, Settings, Lock, LogOut, Sun, Moon, Code, ArrowUp, Bell } from "lucide-react";
+import { RadioIcon, User, Settings, Lock, LogOut, Sun, Moon, Code, ArrowUp, Bell, Palette } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,12 @@ import { PasswordModal } from "@/components/PasswordModal";
 import { ConfigurationsModal } from "@/components/ConfigurationsModal";
 import { useLogo } from "@/hooks/useLogo";
 
-export const Header = () => {
+interface HeaderProps {
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+}
+
+export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [showProfile, setShowProfile] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -169,6 +174,48 @@ export const Header = () => {
                   <Code className="mr-2 h-4 w-4" />
                   <span>Desenvolvedores</span>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                
+                {/* Color Selection Section */}
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex items-center space-x-2">
+                    <Palette className="h-4 w-4" />
+                    <span className="text-sm">Cores do tema</span>
+                  </div>
+                </DropdownMenuLabel>
+                <div className="px-2 py-2">
+                  <div className="flex gap-2 justify-center">
+                    <button
+                      onClick={() => setSelectedColor("blue")}
+                      className={`w-6 h-6 rounded-full bg-blue-600 border-2 transition-all ${
+                        selectedColor === "blue" ? "border-foreground scale-110" : "border-border hover:border-foreground/50"
+                      }`}
+                      title="Azul"
+                    />
+                    <button
+                      onClick={() => setSelectedColor("green")}
+                      className={`w-6 h-6 rounded-full bg-green-600 border-2 transition-all ${
+                        selectedColor === "green" ? "border-foreground scale-110" : "border-border hover:border-foreground/50"
+                      }`}
+                      title="Verde"
+                    />
+                    <button
+                      onClick={() => setSelectedColor("red")}
+                      className={`w-6 h-6 rounded-full bg-red-600 border-2 transition-all ${
+                        selectedColor === "red" ? "border-foreground scale-110" : "border-border hover:border-foreground/50"
+                      }`}
+                      title="Vermelho"
+                    />
+                    <button
+                      onClick={() => setSelectedColor("purple")}
+                      className={`w-6 h-6 rounded-full bg-purple-600 border-2 transition-all ${
+                        selectedColor === "purple" ? "border-foreground scale-110" : "border-border hover:border-foreground/50"
+                      }`}
+                      title="Roxo"
+                    />
+                  </div>
+                </div>
+                
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />

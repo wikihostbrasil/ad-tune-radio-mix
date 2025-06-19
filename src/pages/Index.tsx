@@ -24,22 +24,26 @@ const Index = () => {
     blue: {
       gradient: "from-blue-600 to-blue-800",
       button: "bg-blue-600 hover:bg-blue-700",
-      tab: "bg-blue-600"
+      tab: "bg-blue-600",
+      hover: "hover:bg-blue-500/20"
     },
     green: {
       gradient: "from-green-600 to-green-800", 
       button: "bg-green-600 hover:bg-green-700",
-      tab: "bg-green-600"
+      tab: "bg-green-600",
+      hover: "hover:bg-green-500/20"
     },
     red: {
       gradient: "from-red-600 to-red-800",
       button: "bg-red-600 hover:bg-red-700", 
-      tab: "bg-red-600"
+      tab: "bg-red-600",
+      hover: "hover:bg-red-500/20"
     },
     purple: {
       gradient: "from-purple-600 to-purple-800",
       button: "bg-purple-600 hover:bg-purple-700",
-      tab: "bg-purple-600"
+      tab: "bg-purple-600",
+      hover: "hover:bg-purple-500/20"
     }
   };
 
@@ -85,7 +89,7 @@ const Index = () => {
 
   return (
     <div className="h-screen bg-gradient-to-br from-background via-background to-secondary/20 overflow-hidden flex flex-col">
-      <Header />
+      <Header selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
       
       {/* Main content area with fixed header and footer */}
       <div className="flex-1 flex flex-col pt-16 pb-24 overflow-hidden">
@@ -102,38 +106,6 @@ const Index = () => {
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
                     Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                   </p>
-                </div>
-                
-                {/* Color Selection Buttons */}
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setSelectedColor("blue")}
-                    className={`w-8 h-8 rounded-full bg-blue-600 border-2 transition-all ${
-                      selectedColor === "blue" ? "border-white scale-110" : "border-white/50 hover:border-white/80"
-                    }`}
-                    title="Azul"
-                  />
-                  <button
-                    onClick={() => setSelectedColor("green")}
-                    className={`w-8 h-8 rounded-full bg-green-600 border-2 transition-all ${
-                      selectedColor === "green" ? "border-white scale-110" : "border-white/50 hover:border-white/80"
-                    }`}
-                    title="Verde"
-                  />
-                  <button
-                    onClick={() => setSelectedColor("red")}
-                    className={`w-8 h-8 rounded-full bg-red-600 border-2 transition-all ${
-                      selectedColor === "red" ? "border-white scale-110" : "border-white/50 hover:border-white/80"
-                    }`}
-                    title="Vermelho"
-                  />
-                  <button
-                    onClick={() => setSelectedColor("purple")}
-                    className={`w-8 h-8 rounded-full bg-purple-600 border-2 transition-all ${
-                      selectedColor === "purple" ? "border-white scale-110" : "border-white/50 hover:border-white/80"
-                    }`}
-                    title="Roxo"
-                  />
                 </div>
               </div>
             </div>
@@ -152,7 +124,7 @@ const Index = () => {
                         ${
                           activeTab === tab.id
                             ? `${colorThemes[selectedColor].tab} text-white shadow-lg scale-105`
-                            : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                            : `text-muted-foreground hover:text-foreground ${colorThemes[selectedColor].hover}`
                         }
                       `}
                     >
