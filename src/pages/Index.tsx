@@ -18,6 +18,30 @@ import { SuggestionsModal } from "@/components/SuggestionsModal";
 const Index = () => {
   const [activeTab, setActiveTab] = useState("playlists");
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedColor, setSelectedColor] = useState("blue");
+
+  const colorThemes = {
+    blue: {
+      gradient: "from-blue-600 to-blue-800",
+      button: "bg-blue-600 hover:bg-blue-700",
+      tab: "bg-blue-600"
+    },
+    green: {
+      gradient: "from-green-600 to-green-800", 
+      button: "bg-green-600 hover:bg-green-700",
+      tab: "bg-green-600"
+    },
+    red: {
+      gradient: "from-red-600 to-red-800",
+      button: "bg-red-600 hover:bg-red-700", 
+      tab: "bg-red-600"
+    },
+    purple: {
+      gradient: "from-purple-600 to-purple-800",
+      button: "bg-purple-600 hover:bg-purple-700",
+      tab: "bg-purple-600"
+    }
+  };
 
   const tabs = [
     { id: "playlists", label: "Playlists", icon: Disc3 },
@@ -69,15 +93,47 @@ const Index = () => {
         <ScrollArea className="flex-1">
           <div className="pb-8">
             {/* Radio Banner - now scrollable */}
-            <div className="relative h-32 bg-gradient-to-r from-blue-600 to-blue-800 overflow-hidden">
+            <div className={`relative h-32 bg-gradient-to-r ${colorThemes[selectedColor].gradient} overflow-hidden`}>
               <div className="absolute inset-0 bg-black/20"></div>
-              <div className="relative z-10 h-full flex items-center px-4">
+              <div className="relative z-10 h-full flex items-center justify-between px-4">
                 <div className="text-white">
                   <h1 className="text-3xl font-bold">Rádio Mix FM</h1>
                   <p className="text-blue-100 mt-1">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
                     Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                   </p>
+                </div>
+                
+                {/* Color Selection Buttons */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSelectedColor("blue")}
+                    className={`w-8 h-8 rounded-full bg-blue-600 border-2 transition-all ${
+                      selectedColor === "blue" ? "border-white scale-110" : "border-white/50 hover:border-white/80"
+                    }`}
+                    title="Azul"
+                  />
+                  <button
+                    onClick={() => setSelectedColor("green")}
+                    className={`w-8 h-8 rounded-full bg-green-600 border-2 transition-all ${
+                      selectedColor === "green" ? "border-white scale-110" : "border-white/50 hover:border-white/80"
+                    }`}
+                    title="Verde"
+                  />
+                  <button
+                    onClick={() => setSelectedColor("red")}
+                    className={`w-8 h-8 rounded-full bg-red-600 border-2 transition-all ${
+                      selectedColor === "red" ? "border-white scale-110" : "border-white/50 hover:border-white/80"
+                    }`}
+                    title="Vermelho"
+                  />
+                  <button
+                    onClick={() => setSelectedColor("purple")}
+                    className={`w-8 h-8 rounded-full bg-purple-600 border-2 transition-all ${
+                      selectedColor === "purple" ? "border-white scale-110" : "border-white/50 hover:border-white/80"
+                    }`}
+                    title="Roxo"
+                  />
                 </div>
               </div>
             </div>
@@ -95,7 +151,7 @@ const Index = () => {
                         flex items-center space-x-2 px-4 py-2 rounded-md transition-all duration-200
                         ${
                           activeTab === tab.id
-                            ? "bg-blue-600 text-white shadow-lg scale-105"
+                            ? `${colorThemes[selectedColor].tab} text-white shadow-lg scale-105`
                             : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                         }
                       `}
@@ -119,7 +175,7 @@ const Index = () => {
       {/* Floating Suggestions Button */}
       <Button 
         onClick={() => setShowSuggestions(true)}
-        className="fixed bottom-28 right-6 z-40 rounded-full w-14 h-14 shadow-lg bg-blue-600 hover:bg-blue-700 text-white"
+        className={`fixed bottom-28 right-6 z-40 rounded-full w-14 h-14 shadow-lg ${colorThemes[selectedColor].button} text-white`}
         size="icon"
       >
         <MessageSquare className="w-6 h-6" />
