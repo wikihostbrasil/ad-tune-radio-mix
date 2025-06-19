@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +9,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 const Developers = () => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [openSections, setOpenSections] = useState<Set<string>>(new Set());
+  const [selectedColor, setSelectedColor] = useState("blue");
 
   const copyToClipboard = async (text: string, id: string) => {
     try {
@@ -333,7 +333,8 @@ const toggleTheme = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 pb-24">
-      <Header />
+      <Header selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+      
       
       <div className="container mx-auto p-4 lg:p-6 pt-28">
         <div className="mb-8">
