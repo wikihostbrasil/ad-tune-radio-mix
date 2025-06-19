@@ -255,7 +255,7 @@ export const VinhettasManager = () => {
                           checked={category.active}
                           onCheckedChange={() => toggleCategoryStatus(category.id)}
                           style={{
-                            backgroundColor: category.active ? '#22c55e' : undefined
+                            backgroundColor: category.active ? '#22c55e' : '#2e3338'
                           }}
                         />
                       </TooltipTrigger>
