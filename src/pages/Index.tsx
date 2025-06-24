@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,11 +14,32 @@ import { VirtualVoiceManager } from "@/components/VirtualVoiceManager";
 import { Header } from "@/components/Header";
 import { Player } from "@/components/Player";
 import { SuggestionsModal } from "@/components/SuggestionsModal";
+import { ContentSkeleton } from "@/components/ContentSkeleton";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("playlists");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedColor, setSelectedColor] = useState("blue");
+  const [isContentLoading, setIsContentLoading] = useState(true);
+
+  // Simulate content loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsContentLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [activeTab]);
+
+  // Reset loading when tab changes
+  useEffect(() => {
+    setIsContentLoading(true);
+    const timer = setTimeout(() => {
+      setIsContentLoading(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [activeTab]);
 
   const colorThemes = {
     blue: {
@@ -58,6 +79,27 @@ const Index = () => {
   ];
 
   const renderContent = () => {
+    if (isContentLoading) {
+      // Show skeleton based on active tab
+      switch (activeTab) {
+        case "playlists":
+          return <ContentSkeleton type="list" count={5} />;
+        case "vinhetas":
+        case "anuncios":
+        case "promocoes":
+          return <ContentSkeleton type="card" count={3} />;
+        case "agendar":
+          return <ContentSkeleton type="tabs" count={2} />;
+        case "locucao":
+          return <ContentSkeleton type="card" count={2} />;
+        case "configuracoes":
+          return <ContentSkeleton type="card" count={1} />;
+        default:
+          return <ContentSkeleton type="card" count={3} />;
+      }
+    }
+
+    // Render actual content
     switch (activeTab) {
       case "playlists":
         return <PlaylistsManager />;
