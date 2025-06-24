@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,21 +21,21 @@ const Index = () => {
   const [selectedColor, setSelectedColor] = useState("blue");
   const [isContentLoading, setIsContentLoading] = useState(true);
 
-  // Simulate content loading
+  // Simulate content loading with smoother transition
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsContentLoading(false);
-    }, 1500);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [activeTab]);
 
-  // Reset loading when tab changes
+  // Reset loading when tab changes with smoother timing
   useEffect(() => {
     setIsContentLoading(true);
     const timer = setTimeout(() => {
       setIsContentLoading(false);
-    }, 800);
+    }, 1200);
 
     return () => clearTimeout(timer);
   }, [activeTab]);
@@ -184,8 +183,8 @@ const Index = () => {
                 })}
               </div>
 
-              {/* Main Content */}
-              <div className="animate-fade-in">
+              {/* Main Content with smoother transition */}
+              <div className="animate-fade-in transition-all duration-500 ease-in-out">
                 {renderContent()}
               </div>
             </div>

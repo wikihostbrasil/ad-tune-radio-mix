@@ -7,8 +7,8 @@ interface UseLoadingStateProps {
 }
 
 export const useLoadingState = ({ 
-  initialDelay = 0, 
-  minLoadingTime = 1000 
+  initialDelay = 800, 
+  minLoadingTime = 3500 
 }: UseLoadingStateProps = {}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
