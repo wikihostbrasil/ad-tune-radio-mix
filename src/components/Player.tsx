@@ -18,6 +18,21 @@ export const Player = () => {
     album: "Mix FM"
   };
 
+  // Carregar script externo
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = '/js/radioPlayer.js';
+    script.async = true;
+    document.head.appendChild(script);
+
+    // Cleanup
+    return () => {
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
+    };
+  }, []);
+
   // Simulate progress
   useEffect(() => {
     if (isPlaying) {
@@ -32,8 +47,21 @@ export const Player = () => {
     }
   }, [isPlaying]);
 
+  // Função para conectar com script externo
+  const handlePlayToggle = () => {
+    setIsPlaying(!isPlaying);
+    
+    // Chama função do script externo se existir
+    if (typeof window !== 'undefined' && window.radioPlayer) {
+      window.radioPlayer.togglePlay();
+    }
+  };
+
   return (
     <footer className="fixed bottom-0 left-0 right-0 z-50 text-white border-t border-gray-700" style={{ backgroundColor: '#282E32' }}>
+      {/* Elemento de áudio oculto que o script.js pode controlar */}
+      <audio id="radio-audio" style={{ display: 'none' }}></audio>
+      
       <div className="flex items-center h-20 px-4">
         
         {/* Left - Track Info */}
@@ -46,7 +74,7 @@ export const Player = () => {
             />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-white truncate">{currentTrack.title}</p>
+            <p id="track-name" className="text-sm font-medium text-white truncate">{currentTrack.title}</p>
             <p className="text-xs text-gray-400 truncate">{currentTrack.artist}</p>
           </div>
           <Button 
@@ -77,9 +105,10 @@ export const Player = () => {
               <SkipBack className="w-5 h-5" />
             </Button>
             <Button 
+              id="play-button"
               size="icon" 
               className="w-8 h-8 rounded-full bg-white hover:bg-gray-100 text-black transition-all duration-200 hover:scale-105"
-              onClick={() => setIsPlaying(!isPlaying)}
+              onClick={handlePlayToggle}
             >
               {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
             </Button>
@@ -102,13 +131,13 @@ export const Player = () => {
           {/* Progress Bar with Time */}
           <div className="flex items-center space-x-2 w-full max-w-md">
             <span className="text-xs text-gray-400 w-10 text-right">{currentTrack.currentTime}</span>
-            <Slider
-              value={progress}
-              onValueChange={setProgress}
-              max={100}
-              step={1}
-              className="flex-1 h-1"
-            />
+            <div className="flex-1 h-1 bg-gray-600 rounded-full relative">
+              <div 
+                id="progress-bar"
+                className="h-full bg-white rounded-full transition-all duration-300"
+                style={{ width: `${progress[0]}%` }}
+              ></div>
+            </div>
             <span className="text-xs text-gray-400 w-10">{currentTrack.duration}</span>
           </div>
         </div>

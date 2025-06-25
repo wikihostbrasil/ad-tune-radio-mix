@@ -1,185 +1,181 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Megaphone, 
-  Music, 
-  Mic, 
-  Calendar, 
-  MessageSquare, 
-  Sparkles, 
-  Heart,
-  Settings,
-  BarChart3
-} from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { AnnouncementsManager } from "./AnnouncementsManager";
-import { PlaylistsManager } from "./PlaylistsManager";
-import { VinhettasManager } from "./VinhettasManager";
-import { ScheduleManager } from "./ScheduleManager";
-import { VirtualVoiceManager } from "./VirtualVoiceManager";
-import { PromotionsManager } from "./PromotionsManager";
-import { useAuth } from "@/contexts/AuthContext";
-
-const AppSidebar = ({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: (tab: string) => void }) => {
-  const { state } = useSidebar();
-  const collapsed = state === "collapsed";
-
-  const tabs = [
-    { 
-      id: "announcements", 
-      label: "Anúncios", 
-      icon: Megaphone,
-      description: "Gerencie anúncios publicitários"
-    },
-    { 
-      id: "playlists", 
-      label: "Playlists", 
-      icon: Music,
-      description: "Organize suas músicas"
-    },
-    { 
-      id: "vinhetas", 
-      label: "Vinhetas", 
-      icon: Mic,
-      description: "Vinhetas da rádio"
-    },
-    { 
-      id: "schedule", 
-      label: "Programação", 
-      icon: Calendar,
-      description: "Grade de programação"
-    },
-    { 
-      id: "avisos", 
-      label: "Avisos", 
-      icon: MessageSquare,
-      description: "Avisos e comunicados"
-    },
-    { 
-      id: "especiais", 
-      label: "Especiais Sazonais", 
-      icon: Sparkles,
-      description: "Conteúdo sazonal"
-    },
-    { 
-      id: "spots", 
-      label: "Spots de Cortesia", 
-      icon: Heart,
-      description: "Spots gratuitos"
-    },
-    { 
-      id: "virtual-voice", 
-      label: "Locução Virtual", 
-      icon: Settings,
-      description: "Locuções automáticas"
-    },
-    { 
-      id: "reports", 
-      label: "Relatórios", 
-      icon: BarChart3,
-      description: "Relatórios e estatísticas"
-    }
-  ];
-
-  return (
-    <Sidebar className={collapsed ? "w-14" : "w-60"} collapsible="icon">
-      <SidebarTrigger className="m-2 self-end" />
-      
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {tabs.map((tab) => (
-                <SidebarMenuItem key={tab.id}>
-                  <SidebarMenuButton 
-                    onClick={() => setActiveTab(tab.id)}
-                    className={activeTab === tab.id ? "bg-muted text-primary font-medium" : "hover:bg-muted/50"}
-                    title={tab.description}
-                  >
-                    <tab.icon className="mr-2 h-4 w-4" />
-                    {!collapsed && <span>{tab.label}</span>}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
-  );
-};
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { RadioIcon, Music, Settings, BarChart3, Calendar, Disc3, Mic, MessageSquare } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { VinhettasManager } from "@/components/VinhettasManager";
+import { AnnouncementsManager } from "@/components/AnnouncementsManager";
+import { PromotionsManager } from "@/components/PromotionsManager";
+import { PlaylistsManager } from "@/components/PlaylistsManager";
+import { ScheduleManager } from "@/components/ScheduleManager";
+import { VirtualVoiceManager } from "@/components/VirtualVoiceManager";
+import { Header } from "@/components/Header";
+import { Player } from "@/components/Player";
+import { SuggestionsModal } from "@/components/SuggestionsModal";
 
 export const PlayerDashboard = () => {
-  const [activeTab, setActiveTab] = useState("announcements");
-  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState("playlists");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedColor, setSelectedColor] = useState("blue");
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case "announcements":
-        return <AnnouncementsManager />;
+  const colorThemes = {
+    blue: {
+      gradient: "from-blue-600 to-blue-800",
+      button: "bg-blue-600 hover:bg-blue-700",
+      tab: "bg-blue-600",
+      hover: "hover:bg-blue-500/20"
+    },
+    green: {
+      gradient: "from-green-600 to-green-800", 
+      button: "bg-green-600 hover:bg-green-700",
+      tab: "bg-green-600",
+      hover: "hover:bg-green-500/20"
+    },
+    red: {
+      gradient: "from-red-600 to-red-800",
+      button: "bg-red-600 hover:bg-red-700", 
+      tab: "bg-red-600",
+      hover: "hover:bg-red-500/20"
+    },
+    purple: {
+      gradient: "from-purple-600 to-purple-800",
+      button: "bg-purple-600 hover:bg-purple-700",
+      tab: "bg-purple-600",
+      hover: "hover:bg-purple-500/20"
+    }
+  };
+
+  const tabs = [
+    { id: "playlists", label: "Playlists", icon: Disc3 },
+    { id: "vinhetas", label: "Anúncios", icon: Music },
+    { id: "anuncios", label: "Avisos", icon: RadioIcon },
+    { id: "promocoes", label: "Promoções", icon: BarChart3 },
+    { id: "agendar", label: "Agendar Anúncios", icon: Calendar },
+    { id: "locucao", label: "Locução Virtual (IA)", icon: Mic },
+    { id: "configuracoes", label: "Configurações", icon: Settings },
+  ];
+
+  const renderContent = (tabId: string) => {
+    switch (tabId) {
       case "playlists":
         return <PlaylistsManager />;
       case "vinhetas":
         return <VinhettasManager />;
-      case "schedule":
-        return <ScheduleManager />;
-      case "virtual-voice":
-        return <VirtualVoiceManager />;
-      case "especiais":
-      case "spots":
-      case "avisos":
+      case "anuncios":
+        return <AnnouncementsManager />;
+      case "promocoes":
         return <PromotionsManager />;
-      case "reports":
+      case "agendar":
+        return <ScheduleManager />;
+      case "locucao":
+        return <VirtualVoiceManager />;
+      case "configuracoes":
         return (
-          <Card>
+          <Card className="border-border/40">
             <CardHeader>
-              <CardTitle>Relatórios e Estatísticas</CardTitle>
+              <CardTitle className="text-foreground">Configurações</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">
-                Funcionalidade de relatórios será implementada em breve.
-              </p>
+              <p className="text-muted-foreground">Configurações do sistema em desenvolvimento...</p>
             </CardContent>
           </Card>
         );
       default:
-        return <AnnouncementsManager />;
+        return <PlaylistsManager />;
     }
   };
 
   return (
-    <SidebarProvider>
-      {/* Header with trigger always visible */}
-      <header className="fixed top-16 left-0 right-0 z-40 h-12 flex items-center border-b bg-background/95 backdrop-blur">
-        <SidebarTrigger className="ml-4" />
-        <h2 className="ml-4 text-lg font-semibold">
-          {user?.nome ? `Painel - ${user.nome}` : 'Painel de Controle'}
-        </h2>
-      </header>
+    <div className="h-screen bg-gradient-to-br from-background via-background to-secondary/20 overflow-hidden flex flex-col">
+      <Header selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+      
+      {/* Main content area with fixed header and footer */}
+      <div className="flex-1 flex flex-col pt-16 pb-24 overflow-hidden">
+        {/* Scrollable content area including hero */}
+        <ScrollArea className="flex-1">
+          <div className="pb-8">
+            {/* Radio Banner - now scrollable */}
+            <div className={`relative h-32 bg-gradient-to-r ${colorThemes[selectedColor].gradient} overflow-hidden`}>
+              <div className="absolute inset-0 bg-black/20"></div>
+              <div className="relative z-10 h-full flex items-center justify-between px-4">
+                <div className="flex items-center space-x-4 text-white">
+                  <img 
+                    src="https://placehold.co/120x120/0066FF/FFFFFF?text=LOGO"
+                    alt="Logo da Rádio"
+                    className="w-20 h-20 rounded-lg border-2 border-white/20 object-cover"
+                  />
+                  <div>
+                    <h1 className="text-3xl font-bold">Rádio Mix FM</h1>
+                    <p className="text-blue-100 mt-1">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                      Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="px-4 pt-8">
+              {/* Navigation Tabs */}
+              <div className="flex flex-wrap gap-2 mb-6 p-1 bg-card/50 rounded-lg border border-border/40">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`
+                        flex items-center space-x-2 px-4 py-2 rounded-md transition-all duration-200
+                        ${
+                          activeTab === tab.id
+                            ? `${colorThemes[selectedColor].tab} text-white shadow-lg`
+                            : `text-muted-foreground hover:text-foreground ${colorThemes[selectedColor].hover}`
+                        }
+                      `}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="font-medium">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
 
-      <div className="min-h-screen bg-background pt-28 pb-20 flex w-full">
-        <AppSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        
-        <main className="flex-1 p-6">
-          <div className="transition-all duration-300 ease-in-out">
-            {renderContent()}
+              {/* Main Content com framer-motion */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ 
+                    duration: 0.3,
+                    ease: "easeInOut"
+                  }}
+                >
+                  {renderContent(activeTab)}
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
-        </main>
+        </ScrollArea>
       </div>
-    </SidebarProvider>
+
+      {/* Floating Suggestions Button */}
+      <Button 
+        onClick={() => setShowSuggestions(true)}
+        className={`fixed bottom-28 right-6 z-40 rounded-full w-14 h-14 shadow-lg ${colorThemes[selectedColor].button} text-white`}
+        size="icon"
+      >
+        <MessageSquare className="w-6 h-6" />
+      </Button>
+
+      <Player />
+      <SuggestionsModal 
+        isOpen={showSuggestions} 
+        onClose={() => setShowSuggestions(false)} 
+      />
+    </div>
   );
 };
