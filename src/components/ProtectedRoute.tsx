@@ -1,7 +1,6 @@
 
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useEffect } from 'react';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -9,24 +8,7 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
-  const { user, loading, checkAuth } = useAuth();
-
-  // Revalida autenticação periodicamente para detectar alterações no devtools
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (user) {
-        // Só revalida se o usuário ainda estiver ativo na página
-        if (document.visibilityState === 'visible') {
-          checkAuth().catch((error) => {
-            // Se houver erro na verificação, não force logout imediatamente
-            console.log('Erro na revalidação automática:', error);
-          });
-        }
-      }
-    }, 60000); // Aumentado para 60 segundos para ser menos agressivo
-
-    return () => clearInterval(interval);
-  }, [user, checkAuth]);
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (

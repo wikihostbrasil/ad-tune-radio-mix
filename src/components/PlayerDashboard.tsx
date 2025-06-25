@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,21 +19,16 @@ export const PlayerDashboard = () => {
   const [activeTab, setActiveTab] = useState("playlists");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedColor, setSelectedColor] = useState("blue");
-  const [isContentVisible, setIsContentVisible] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Transição suave para mudança de abas - começa invisível e transiciona
+  // Transição suave para mudança de abas - sem piscar
   useEffect(() => {
     if (activeTab) {
-      setIsTransitioning(true);
-      setIsContentVisible(false); // Torna invisível primeiro
-      
+      setIsTransitioning(true); // Inicia transição
+
       const timer = setTimeout(() => {
-        setIsContentVisible(true); // Aparece com transição
-        setTimeout(() => {
-          setIsTransitioning(false); // Finaliza transição
-        }, 500);
-      }, 50); // Pequeno delay para garantir que a transição seja visível
+        setIsTransitioning(false); // Finaliza transição após delay
+      }, 300); // Tempo da transição
 
       return () => clearTimeout(timer);
     }
@@ -160,12 +156,15 @@ export const PlayerDashboard = () => {
                 })}
               </div>
 
-              {/* Main Content com transição melhorada - invisível durante mudança */}
-              <div className={`transition-all duration-500 ease-in-out ${
-                isContentVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'
-              }`}>
-                {/* Só renderiza o conteúdo quando não está em transição ou quando está visível */}
-                {(!isTransitioning || isContentVisible) && renderContent()}
+              {/* Main Content com transição suave sem piscar */}
+              <div 
+                className={`transition-all duration-300 ease-in-out ${
+                  isTransitioning 
+                    ? 'opacity-0 transform translate-y-1' 
+                    : 'opacity-100 transform translate-y-0'
+                }`}
+              >
+                {renderContent()}
               </div>
             </div>
           </div>
