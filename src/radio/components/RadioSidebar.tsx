@@ -47,14 +47,8 @@ export const RadioSidebar = ({ activeTab, setActiveTab, selectedColor }: RadioSi
             <SidebarGroupLabel className="text-muted-foreground">
               Menu Principal
             </SidebarGroupLabel>
-            <SidebarTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-foreground"
-              >
-                <Menu className="h-4 w-4" />
-              </Button>
+            <SidebarTrigger>
+              <Menu className="h-4 w-4" />
             </SidebarTrigger>
           </div>
           <SidebarGroupContent>

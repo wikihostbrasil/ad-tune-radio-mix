@@ -39,7 +39,18 @@ const ScrollBar = React.forwardRef<
     )}
     {...props}
   >
-    <ScrollAreaPrimitive.ScrollAreaScrollbar className="relative flex-1 rounded-full bg-border opacity-50 hover:opacity-100 transition-opacity" />
+    <ScrollAreaPrimitive.ScrollAreaThumb 
+      className={cn(
+        "relative flex-1 rounded-full transition-colors",
+        "bg-border hover:bg-border/80",
+        // Estilo Spotify customizado
+        "bg-gradient-to-b from-gray-400 to-gray-600",
+        "hover:from-gray-300 hover:to-gray-500",
+        "dark:from-gray-600 dark:to-gray-800",
+        "dark:hover:from-gray-500 dark:hover:to-gray-700",
+        "shadow-sm"
+      )} 
+    />
   </ScrollAreaPrimitive.ScrollAreaScrollbar>
 ))
 ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName
