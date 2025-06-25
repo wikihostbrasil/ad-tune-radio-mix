@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Download, Search, Play, Pause, Filter } from "lucide-react";
-import { Header } from "@/components/Header";
+import { Header } from "@/downloads/components/Header";
 import { 
   Select,
   SelectContent,
@@ -19,6 +19,8 @@ interface AudioFile {
   name: string;
   category: 'vinheta' | 'anuncio' | 'musica' | 'efeito';
   duration: string;
+  startTime?: string;
+  endTime?: string;
   size: string;
   url: string;
   preview?: string;
@@ -39,6 +41,8 @@ const DownloadsPage = () => {
         name: "Vinheta Abertura Show",
         category: "vinheta",
         duration: "0:15",
+        startTime: "08:00",
+        endTime: "18:00",
         size: "2.3 MB",
         url: "/downloads/vinheta-abertura.mp3",
         preview: "/previews/vinheta-abertura-preview.mp3"
@@ -48,6 +52,8 @@ const DownloadsPage = () => {
         name: "Anúncio Promoção Black Friday",
         category: "anuncio",
         duration: "0:30",
+        startTime: "12:00",
+        endTime: "22:00",
         size: "4.1 MB",
         url: "/downloads/anuncio-black-friday.mp3"
       },
@@ -56,6 +62,8 @@ const DownloadsPage = () => {
         name: "Efeito Sonoro Transição",
         category: "efeito",
         duration: "0:05",
+        startTime: "06:00",
+        endTime: "23:59",
         size: "800 KB",
         url: "/downloads/efeito-transicao.mp3"
       },
@@ -64,6 +72,8 @@ const DownloadsPage = () => {
         name: "Música de Fundo Institucional",
         category: "musica",
         duration: "2:30",
+        startTime: "09:00",
+        endTime: "17:00",
         size: "8.5 MB",
         url: "/downloads/musica-institucional.mp3",
         preview: "/previews/musica-institucional-preview.mp3"
@@ -183,6 +193,16 @@ const DownloadsPage = () => {
                           <span className="text-sm text-muted-foreground">
                             {file.size}
                           </span>
+                          {file.startTime && file.endTime && (
+                            <>
+                              <span className="text-sm text-muted-foreground">
+                                Início: {file.startTime}
+                              </span>
+                              <span className="text-sm text-muted-foreground">
+                                Término: {file.endTime}
+                              </span>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
