@@ -19,7 +19,7 @@ const Unauthorized = () => {
         </CardHeader>
         <CardContent>
           <Button asChild className="w-full">
-            <Link to="/painel">Voltar ao Painel</Link>
+            <Link to="/player">Voltar ao Player</Link>
           </Button>
         </CardContent>
       </Card>

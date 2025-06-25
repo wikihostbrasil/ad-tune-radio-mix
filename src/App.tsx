@@ -27,15 +27,15 @@ const AppContent = () => {
     minLoadingTime: 4000
   });
 
-  // Show splash only on main page and painel
-  if ((location.pathname === "/" || location.pathname === "/painel") && showSplash) {
+  // Show splash only on main page and player
+  if ((location.pathname === "/" || location.pathname === "/player") && showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} />;
   }
 
   return (
     <Routes>
       <Route path="/" element={<Index />} />
-      <Route path="/painel" element={
+      <Route path="/player" element={
         <ProtectedRoute>
           <Painel />
         </ProtectedRoute>
