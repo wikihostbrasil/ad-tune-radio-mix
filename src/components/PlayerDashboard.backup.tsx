@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Megaphone, 
@@ -12,29 +13,15 @@ import {
   Settings,
   BarChart3
 } from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
-  useSidebar,
-} from "@/components/ui/sidebar";
 import { AnnouncementsManager } from "./AnnouncementsManager";
 import { PlaylistsManager } from "./PlaylistsManager";
 import { VinhettasManager } from "./VinhettasManager";
 import { ScheduleManager } from "./ScheduleManager";
 import { VirtualVoiceManager } from "./VirtualVoiceManager";
 import { PromotionsManager } from "./PromotionsManager";
-import { useAuth } from "@/contexts/AuthContext";
 
-const AppSidebar = ({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: (tab: string) => void }) => {
-  const { collapsed } = useSidebar();
+export const PlayerDashboard = () => {
+  const [activeTab, setActiveTab] = useState("announcements");
 
   const tabs = [
     { 
@@ -93,39 +80,6 @@ const AppSidebar = ({ activeTab, setActiveTab }: { activeTab: string; setActiveT
     }
   ];
 
-  return (
-    <Sidebar className={collapsed ? "w-14" : "w-60"} collapsible>
-      <SidebarTrigger className="m-2 self-end" />
-      
-      <SidebarContent>
-        <SidebarGroup defaultOpen>
-          <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {tabs.map((tab) => (
-                <SidebarMenuItem key={tab.id}>
-                  <SidebarMenuButton 
-                    onClick={() => setActiveTab(tab.id)}
-                    className={activeTab === tab.id ? "bg-muted text-primary font-medium" : "hover:bg-muted/50"}
-                    title={tab.description}
-                  >
-                    <tab.icon className="mr-2 h-4 w-4" />
-                    {!collapsed && <span>{tab.label}</span>}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
-  );
-};
-
-export const PlayerDashboard = () => {
-  const [activeTab, setActiveTab] = useState("announcements");
-  const { user } = useAuth();
-
   const renderContent = () => {
     switch (activeTab) {
       case "announcements":
@@ -161,24 +115,32 @@ export const PlayerDashboard = () => {
   };
 
   return (
-    <SidebarProvider collapsedWidth={56}>
-      {/* Header with trigger always visible */}
-      <header className="fixed top-16 left-0 right-0 z-40 h-12 flex items-center border-b bg-background/95 backdrop-blur">
-        <SidebarTrigger className="ml-4" />
-        <h2 className="ml-4 text-lg font-semibold">
-          {user?.nome ? `Painel - ${user.nome}` : 'Painel de Controle'}
-        </h2>
-      </header>
+    <div className="min-h-screen bg-background pt-16 pb-20">
+      <div className="container mx-auto p-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-9 mb-6">
+            {tabs.map((tab) => (
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className="flex items-center gap-2 text-xs lg:text-sm"
+                title={tab.description}
+              >
+                <tab.icon className="w-4 h-4" />
+                <span className="hidden sm:inline">{tab.label}</span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
 
-      <div className="min-h-screen bg-background pt-28 pb-20 flex w-full">
-        <AppSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        
-        <main className="flex-1 p-6">
           <div className="transition-all duration-300 ease-in-out">
-            {renderContent()}
+            {tabs.map((tab) => (
+              <TabsContent key={tab.id} value={tab.id} className="mt-0">
+                {renderContent()}
+              </TabsContent>
+            ))}
           </div>
-        </main>
+        </Tabs>
       </div>
-    </SidebarProvider>
+    </div>
   );
 };

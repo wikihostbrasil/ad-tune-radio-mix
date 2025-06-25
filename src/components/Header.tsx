@@ -33,19 +33,23 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
   const [showVehicleManager, setShowVehicleManager] = useState(false);
   const [isVehiclePlaying, setIsVehiclePlaying] = useState(false);
   const { logoUrl } = useLogo();
-  const { user, logout } = useAuth();
+  const { user, logout, preferences } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Initialize theme based on current state
-    if (isDarkMode) {
+    // Load theme from user preferences if available
+    const savedTheme = preferences?.theme || 'dark';
+    const isDark = savedTheme === 'dark';
+    setIsDarkMode(isDark);
+    
+    if (isDark) {
       document.documentElement.classList.add('dark');
       document.documentElement.classList.remove('light');
     } else {
       document.documentElement.classList.remove('dark');
       document.documentElement.classList.add('light');
     }
-  }, [isDarkMode]);
+  }, [preferences]);
 
   const toggleTheme = () => {
     const newMode = !isDarkMode;
@@ -72,6 +76,8 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
     await logout();
   };
 
+  const radioName = user?.nome || 'Rádio Mix FM';
+
   return (
     <TooltipProvider>
       <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -90,7 +96,7 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
               />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-foreground">{user?.nome || 'Rádio Mix FM'}</h1>
+              <h1 className="text-lg font-bold text-foreground">{radioName}</h1>
             </div>
           </div>
 

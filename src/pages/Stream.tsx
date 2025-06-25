@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { RadioIcon, Play, Pause, SkipBack, SkipForward, Volume2, Shuffle, Repeat, Heart } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useLogo } from "@/hooks/useLogo";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Stream = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -11,15 +11,17 @@ const Stream = () => {
   const [progress, setProgress] = useState([45]);
   const [isLiked, setIsLiked] = useState(false);
   const { logoUrl } = useLogo();
+  const { user } = useAuth();
 
   const currentTrack = {
     title: "Rock Clássico Mix",
-    artist: "Tocando agora na Rádio Mix FM",
+    artist: `Tocando agora na ${user?.nome || 'Rádio Mix FM'}`,
     duration: "4:32",
     currentTime: "2:15"
   };
 
-  // Simulação do progresso da música
+  const radioName = user?.nome || 'Rádio Mix FM';
+
   useEffect(() => {
     if (isPlaying) {
       const interval = setInterval(() => {
@@ -57,7 +59,7 @@ const Stream = () => {
               className="w-32 h-32 object-contain rounded-full"
             />
           </div>
-          <h1 className="text-4xl font-bold text-center text-foreground mb-2">Rádio Mix FM</h1>
+          <h1 className="text-4xl font-bold text-center text-foreground mb-2">{radioName}</h1>
           <p className="text-center text-muted-foreground">
             Transmitindo ao vivo 24/7
           </p>
