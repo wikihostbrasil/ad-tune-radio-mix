@@ -30,10 +30,12 @@ const Login = () => {
         toast.success("Login realizado com sucesso!");
         navigate("/player");
       } else {
-        toast.error(result.error || "Erro ao fazer login");
+        // Mensagens de fallback personalizadas
+        const errorMessage = result.error || "Email ou senha inválidos";
+        toast.error(errorMessage);
       }
     } catch (error) {
-      toast.error("Erro de conexão");
+      toast.error("Erro de conexão. Tente novamente.");
     } finally {
       setIsLoading(false);
     }

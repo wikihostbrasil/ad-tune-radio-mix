@@ -21,13 +21,13 @@ export const PlayerDashboard = () => {
   const [selectedColor, setSelectedColor] = useState("blue");
   const [isContentLoading, setIsContentLoading] = useState(false);
 
-  // Smooth loading transition for tab changes
+  // Smooth loading transition for tab changes - apenas opacidade
   useEffect(() => {
     if (activeTab) {
       setIsContentLoading(true);
       const timer = setTimeout(() => {
         setIsContentLoading(false);
-      }, 300);
+      }, 200);
 
       return () => clearTimeout(timer);
     }
@@ -144,7 +144,7 @@ export const PlayerDashboard = () => {
                         flex items-center space-x-2 px-4 py-2 rounded-md transition-all duration-200
                         ${
                           activeTab === tab.id
-                            ? `${colorThemes[selectedColor].tab} text-white shadow-lg scale-105`
+                            ? `${colorThemes[selectedColor].tab} text-white shadow-lg`
                             : `text-muted-foreground hover:text-foreground ${colorThemes[selectedColor].hover}`
                         }
                       `}
@@ -156,9 +156,9 @@ export const PlayerDashboard = () => {
                 })}
               </div>
 
-              {/* Main Content with smooth loading transition */}
-              <div className={`transition-all duration-300 ease-in-out ${
-                isContentLoading ? 'opacity-60 scale-95' : 'opacity-100 scale-100'
+              {/* Main Content with smooth opacity transition only */}
+              <div className={`transition-opacity duration-300 ease-in-out ${
+                isContentLoading ? 'opacity-50' : 'opacity-100'
               }`}>
                 {renderContent()}
               </div>
