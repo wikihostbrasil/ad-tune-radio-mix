@@ -14,7 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 const RadioDashboard = () => {
   const [activeTab, setActiveTab] = useState("playlists");
-  const [selectedColor] = useState("purple");
+  const [selectedColor, setSelectedColor] = useState("purple");
 
   const renderContent = () => {
     switch (activeTab) {
@@ -46,10 +46,10 @@ const RadioDashboard = () => {
         
         <SidebarInset className="flex-1 flex flex-col">
           {/* Header fixo */}
-          <Header />
+          <Header selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
           
           {/* Conteúdo principal com scroll customizado */}
-          <div className="flex-1 flex flex-col min-h-0">
+          <div className="flex-1 flex flex-col min-h-0 pt-16">
             <ScrollArea className="flex-1">
               <div className="p-6 pb-24">
                 {renderContent()}
