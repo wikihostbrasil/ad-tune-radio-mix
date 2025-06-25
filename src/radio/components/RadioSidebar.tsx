@@ -1,6 +1,7 @@
 
-import { Disc3, Music, RadioIcon, BarChart3, Calendar, Mic, Settings } from "lucide-react";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { Disc3, Music, RadioIcon, BarChart3, Calendar, Mic, Settings, Menu } from "lucide-react";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 
 interface RadioSidebarProps {
   activeTab: string;
@@ -42,9 +43,20 @@ export const RadioSidebar = ({ activeTab, setActiveTab, selectedColor }: RadioSi
     <Sidebar className="w-64 border-r border-border/40">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-muted-foreground">
-            Menu Principal
-          </SidebarGroupLabel>
+          <div className="flex items-center justify-between px-4 py-2">
+            <SidebarGroupLabel className="text-muted-foreground">
+              Menu Principal
+            </SidebarGroupLabel>
+            <SidebarTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground"
+              >
+                <Menu className="h-4 w-4" />
+              </Button>
+            </SidebarTrigger>
+          </div>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => {

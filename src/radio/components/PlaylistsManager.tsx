@@ -5,10 +5,10 @@ export const PlaylistsManager = () => {
   return (
     <Card className="border-border/40">
       <CardHeader>
-        <CardTitle className="text-foreground">Playlists Musicais</CardTitle>
+        <CardTitle className="text-foreground">Playlists</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground">Gerencie suas playlists por dia da semana (2 selecionadas em Padrão)</p>
+        <p className="text-muted-foreground">Gerencie suas playlists de música</p>
       </CardContent>
     </Card>
   );

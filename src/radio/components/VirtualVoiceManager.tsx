@@ -8,7 +8,7 @@ export const VirtualVoiceManager = () => {
         <CardTitle className="text-foreground">Locução IA</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground">Gerencie locuções virtuais com IA</p>
+        <p className="text-muted-foreground">Configure a locução virtual por IA</p>
       </CardContent>
     </Card>
   );
