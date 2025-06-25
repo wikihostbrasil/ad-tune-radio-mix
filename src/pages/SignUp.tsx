@@ -6,10 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioIcon, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,15 +21,32 @@ const SignUp = () => {
     confirmPassword: "",
   });
   const navigate = useNavigate();
+  const { register } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (formData.password !== formData.confirmPassword) {
-      alert("As senhas não coincidem");
+      toast.error("As senhas não coincidem");
       return;
     }
-    console.log("Criar conta:", formData);
-    navigate("/");
+
+    setIsLoading(true);
+
+    try {
+      const result = await register(formData.email, formData.password, formData.name);
+      
+      if (result.success) {
+        toast.success("Conta criada com sucesso! Faça login para continuar.");
+        navigate("/login");
+      } else {
+        toast.error(result.error || "Erro ao criar conta");
+      }
+    } catch (error) {
+      toast.error("Erro de conexão");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -51,6 +71,7 @@ const SignUp = () => {
                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 placeholder="Seu nome completo"
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -62,6 +83,7 @@ const SignUp = () => {
                 onChange={(e) => setFormData(prev => ({ ...prev, radioName: e.target.value }))}
                 placeholder="Nome da sua rádio"
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -74,6 +96,7 @@ const SignUp = () => {
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                 placeholder="seu@email.com"
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -87,6 +110,7 @@ const SignUp = () => {
                   onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                   placeholder="Digite sua senha"
                   required
+                  disabled={isLoading}
                 />
                 <Button
                   type="button"
@@ -94,6 +118,7 @@ const SignUp = () => {
                   size="sm"
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={isLoading}
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -114,6 +139,7 @@ const SignUp = () => {
                   onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                   placeholder="Confirme sua senha"
                   required
+                  disabled={isLoading}
                 />
                 <Button
                   type="button"
@@ -121,6 +147,7 @@ const SignUp = () => {
                   size="sm"
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  disabled={isLoading}
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -134,8 +161,9 @@ const SignUp = () => {
             <Button 
               type="submit" 
               className="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800"
+              disabled={isLoading}
             >
-              Criar conta
+              {isLoading ? "Criando conta..." : "Criar conta"}
             </Button>
 
             <div className="text-center">

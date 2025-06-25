@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { RadioIcon, User, Settings, Lock, LogOut, Sun, Moon, Code, ArrowUp, Bell, Palette } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +19,7 @@ import { PasswordModal } from "@/components/PasswordModal";
 import { ConfigurationsModal } from "@/components/ConfigurationsModal";
 import { VehicleManager } from "@/components/VehicleManager";
 import { useLogo } from "@/hooks/useLogo";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface HeaderProps {
   selectedColor: string;
@@ -32,6 +34,7 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
   const [showVehicleManager, setShowVehicleManager] = useState(false);
   const [isVehiclePlaying, setIsVehiclePlaying] = useState(false);
   const { logoUrl } = useLogo();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,6 +67,10 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
 
   const handleVehiclePlayToggle = () => {
     setIsVehiclePlaying(!isVehiclePlaying);
+  };
+
+  const handleLogout = async () => {
+    await logout();
   };
 
   return (
@@ -156,10 +163,13 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
               <DropdownMenuContent className="w-56 bg-popover" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">Admin</p>
+                    <p className="text-sm font-medium leading-none">{user?.name || 'Usuário'}</p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      admin@radiomix.com
+                      {user?.email}
                     </p>
+                    <Badge variant="secondary" className="w-fit">
+                      {user?.role === 'admin' ? 'Administrador' : 'Usuário'}
+                    </Badge>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -223,7 +233,7 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
                 </div>
                 
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
+                <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive" onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Sair</span>
                 </DropdownMenuItem>

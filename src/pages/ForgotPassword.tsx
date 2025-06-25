@@ -6,15 +6,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioIcon, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { recoverPassword } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Recuperar senha:", email);
-    setSubmitted(true);
+    setIsLoading(true);
+
+    try {
+      const result = await recoverPassword(email);
+      
+      if (result.success) {
+        setSubmitted(true);
+        toast.success("Instruções enviadas para seu e-mail!");
+      } else {
+        toast.error(result.error || "Erro ao enviar instruções");
+      }
+    } catch (error) {
+      toast.error("Erro de conexão");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -44,14 +62,16 @@ const ForgotPassword = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="seu@email.com"
                   required
+                  disabled={isLoading}
                 />
               </div>
 
               <Button 
                 type="submit" 
                 className="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800"
+                disabled={isLoading}
               >
-                Enviar instruções
+                {isLoading ? "Enviando..." : "Enviar instruções"}
               </Button>
             </form>
           ) : (

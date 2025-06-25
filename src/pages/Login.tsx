@@ -6,19 +6,37 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioIcon, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login:", formData);
-    navigate("/");
+    setIsLoading(true);
+
+    try {
+      const result = await login(formData.email, formData.password);
+      
+      if (result.success) {
+        toast.success("Login realizado com sucesso!");
+        navigate("/painel");
+      } else {
+        toast.error(result.error || "Erro ao fazer login");
+      }
+    } catch (error) {
+      toast.error("Erro de conexão");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -44,6 +62,7 @@ const Login = () => {
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                 placeholder="seu@email.com"
                 required
+                disabled={isLoading}
               />
             </div>
 
@@ -57,6 +76,7 @@ const Login = () => {
                   onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                   placeholder="Digite sua senha"
                   required
+                  disabled={isLoading}
                 />
                 <Button
                   type="button"
@@ -64,6 +84,7 @@ const Login = () => {
                   size="sm"
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={isLoading}
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -86,8 +107,9 @@ const Login = () => {
             <Button 
               type="submit" 
               className="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800"
+              disabled={isLoading}
             >
-              Entrar
+              {isLoading ? "Entrando..." : "Entrar"}
             </Button>
 
             <div className="text-center">
