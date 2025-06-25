@@ -47,7 +47,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       if (response.ok) {
         const data = await response.json();
-        setUser(data.user);
+        if (data.status === 'success' && data.data) {
+          setUser(data.data);
+        } else {
+          setUser(null);
+        }
       } else {
         setUser(null);
       }
@@ -72,11 +76,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       const data = await response.json();
 
-      if (response.ok) {
-        setUser(data.user);
+      if (response.ok && data.status === 'success') {
+        // Atualiza o estado do usuário imediatamente
+        setUser(data.data);
         return { success: true };
       } else {
-        return { success: false, error: data.message || 'Erro ao fazer login' };
+        return { success: false, error: data.message || 'Email ou senha inválidos' };
       }
     } catch (error) {
       console.error('Erro no login:', error);
