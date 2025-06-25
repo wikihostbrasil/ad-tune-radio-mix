@@ -44,23 +44,23 @@ const RadioDashboard = () => {
           selectedColor={selectedColor}
         />
         
-        <SidebarInset className="flex-1 flex flex-col">
-          {/* Header fixo */}
-          <div className="fixed top-0 left-0 right-0 z-50">
+        <SidebarInset className="flex-1 flex flex-col min-w-0">
+          {/* Header fixo - ajustado para não cobrir o sidebar trigger */}
+          <div className="fixed top-0 left-0 right-0 z-40 md:left-64">
             <Header selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
           </div>
           
           {/* Conteúdo principal com scroll customizado */}
-          <div className="flex-1 flex flex-col min-h-0 pt-16">
+          <div className="flex-1 flex flex-col min-h-0 pt-16 pb-24">
             <ScrollArea className="flex-1">
-              <div className="p-6 pb-24">
+              <div className="p-6">
                 {renderContent()}
               </div>
             </ScrollArea>
           </div>
           
-          {/* Player fixo no footer */}
-          <div className="fixed bottom-0 left-0 right-0 z-40">
+          {/* Player fixo no footer - ajustado para não cobrir o sidebar */}
+          <div className="fixed bottom-0 left-0 right-0 z-30 md:left-64">
             <Player />
           </div>
         </SidebarInset>

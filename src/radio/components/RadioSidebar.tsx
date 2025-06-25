@@ -50,15 +50,15 @@ export const RadioSidebar = ({ activeTab, setActiveTab, selectedColor }: RadioSi
   ];
 
   return (
-    <Sidebar className="w-64 border-r border-border/40 z-30">
-      <SidebarHeader className="p-4 border-b border-border/40">
+    <Sidebar className="w-64 border-r border-border/40 z-50 fixed left-0 top-0 h-full md:relative">
+      <SidebarHeader className="p-4 border-b border-border/40 bg-background">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-foreground">Menu</h2>
-          <SidebarTrigger />
+          <SidebarTrigger className="md:hidden" />
         </div>
       </SidebarHeader>
       
-      <SidebarContent>
+      <SidebarContent className="bg-background">
         <SidebarGroup>
           <SidebarGroupLabel className="text-muted-foreground px-4 py-2">
             Menu Principal
