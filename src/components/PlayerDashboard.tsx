@@ -19,15 +19,15 @@ export const PlayerDashboard = () => {
   const [activeTab, setActiveTab] = useState("playlists");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedColor, setSelectedColor] = useState("blue");
-  const [isContentLoading, setIsContentLoading] = useState(false);
+  const [isContentVisible, setIsContentVisible] = useState(true);
 
-  // Smooth loading transition for tab changes - apenas opacidade
+  // Transição suave para mudança de abas - inicia invisível e depois aparece
   useEffect(() => {
     if (activeTab) {
-      setIsContentLoading(true);
+      setIsContentVisible(false); // Começa invisível
       const timer = setTimeout(() => {
-        setIsContentLoading(false);
-      }, 200);
+        setIsContentVisible(true); // Aparece com transição
+      }, 100);
 
       return () => clearTimeout(timer);
     }
@@ -71,7 +71,6 @@ export const PlayerDashboard = () => {
   ];
 
   const renderContent = () => {
-    // Render actual content
     switch (activeTab) {
       case "playlists":
         return <PlaylistsManager />;
@@ -156,9 +155,9 @@ export const PlayerDashboard = () => {
                 })}
               </div>
 
-              {/* Main Content with smooth opacity transition only */}
+              {/* Main Content com transição de opacidade suave */}
               <div className={`transition-opacity duration-300 ease-in-out ${
-                isContentLoading ? 'opacity-50' : 'opacity-100'
+                isContentVisible ? 'opacity-100' : 'opacity-0'
               }`}>
                 {renderContent()}
               </div>

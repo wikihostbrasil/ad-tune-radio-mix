@@ -11,10 +11,8 @@ const Index = () => {
   useEffect(() => {
     if (!loading) {
       if (user) {
-        // Se está autenticado, mostra splash e depois vai para /player
-        setTimeout(() => {
-          navigate("/player", { replace: true });
-        }, 4000); // Tempo do splash screen
+        // Se está autenticado, não redireciona imediatamente - deixa o splash aparecer
+        // O splash irá redirecionar após 4 segundos
       } else {
         // Se não está autenticado, vai direto para login
         navigate("/login", { replace: true });
@@ -22,12 +20,17 @@ const Index = () => {
     }
   }, [user, loading, navigate]);
 
-  // Mostra splash apenas se estiver autenticado
-  if (!loading && user) {
+  // Enquanto carrega, não mostra nada
+  if (loading) {
+    return null;
+  }
+
+  // Se autenticado, mostra splash que depois redireciona para /player
+  if (user) {
     return <SplashScreen onComplete={() => navigate("/player", { replace: true })} />;
   }
 
-  // Enquanto carrega ou se não autenticado, não mostra nada (vai redirecionar)
+  // Se não autenticado, não mostra nada (vai redirecionar)
   return null;
 };
 

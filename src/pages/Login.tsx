@@ -28,7 +28,8 @@ const Login = () => {
       
       if (result.success) {
         toast.success("Login realizado com sucesso!");
-        navigate("/player");
+        // Redireciona para /player após login bem-sucedido
+        navigate("/player", { replace: true });
       } else {
         // Mensagens de fallback personalizadas
         const errorMessage = result.error || "Email ou senha inválidos";
