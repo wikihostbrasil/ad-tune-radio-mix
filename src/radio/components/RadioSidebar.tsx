@@ -1,7 +1,17 @@
 
-import { Disc3, Music, RadioIcon, BarChart3, Calendar, Mic, Settings, Menu } from "lucide-react";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
+import { Disc3, Music, RadioIcon, BarChart3, Calendar, Mic, Settings } from "lucide-react";
+import { 
+  Sidebar, 
+  SidebarContent, 
+  SidebarGroup, 
+  SidebarGroupContent, 
+  SidebarGroupLabel, 
+  SidebarMenu, 
+  SidebarMenuButton, 
+  SidebarMenuItem,
+  SidebarHeader,
+  SidebarTrigger
+} from "@/components/ui/sidebar";
 
 interface RadioSidebarProps {
   activeTab: string;
@@ -40,17 +50,19 @@ export const RadioSidebar = ({ activeTab, setActiveTab, selectedColor }: RadioSi
   ];
 
   return (
-    <Sidebar className="w-64 border-r border-border/40">
+    <Sidebar className="w-64 border-r border-border/40 z-30">
+      <SidebarHeader className="p-4 border-b border-border/40">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-foreground">Menu</h2>
+          <SidebarTrigger />
+        </div>
+      </SidebarHeader>
+      
       <SidebarContent>
         <SidebarGroup>
-          <div className="flex items-center justify-between px-4 py-2">
-            <SidebarGroupLabel className="text-muted-foreground">
-              Menu Principal
-            </SidebarGroupLabel>
-            <SidebarTrigger>
-              <Menu className="h-4 w-4" />
-            </SidebarTrigger>
-          </div>
+          <SidebarGroupLabel className="text-muted-foreground px-4 py-2">
+            Menu Principal
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => {
@@ -62,7 +74,7 @@ export const RadioSidebar = ({ activeTab, setActiveTab, selectedColor }: RadioSi
                     <SidebarMenuButton
                       onClick={() => setActiveTab(item.id)}
                       className={`
-                        flex items-center space-x-3 px-3 py-2 rounded-md transition-all duration-200 cursor-pointer
+                        flex items-center space-x-3 px-4 py-3 mx-2 rounded-md transition-all duration-200 cursor-pointer
                         ${isActive 
                           ? colorThemes[selectedColor].active 
                           : `text-muted-foreground hover:text-foreground ${colorThemes[selectedColor].hover}`

@@ -46,7 +46,9 @@ const RadioDashboard = () => {
         
         <SidebarInset className="flex-1 flex flex-col">
           {/* Header fixo */}
-          <Header selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+          <div className="fixed top-0 left-0 right-0 z-50">
+            <Header selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+          </div>
           
           {/* Conteúdo principal com scroll customizado */}
           <div className="flex-1 flex flex-col min-h-0 pt-16">
@@ -58,7 +60,9 @@ const RadioDashboard = () => {
           </div>
           
           {/* Player fixo no footer */}
-          <Player />
+          <div className="fixed bottom-0 left-0 right-0 z-40">
+            <Player />
+          </div>
         </SidebarInset>
       </div>
     </SidebarProvider>
