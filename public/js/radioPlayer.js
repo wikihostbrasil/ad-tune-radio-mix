@@ -47,6 +47,10 @@ class RadioPlayerEngine {
         this.isPlaying = false;
         this.updatePlayButton();
       });
+
+      this.audioElement.addEventListener('error', (e) => {
+        console.error('Erro no áudio:', e);
+      });
     }
   }
 
@@ -88,9 +92,10 @@ class RadioPlayerEngine {
 
   play() {
     if (this.audioElement) {
-      // Exemplo: stream de rádio
+      // Exemplo: stream de rádio (substitua por sua URL real)
       if (!this.audioElement.src) {
-        this.audioElement.src = 'https://stream.example.com/radio.mp3';
+        // URL de teste que funciona - substitua pela sua rádio
+        this.audioElement.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
       }
       this.audioElement.play().catch(e => console.log('Erro ao tocar:', e));
     }
@@ -106,7 +111,16 @@ class RadioPlayerEngine {
   insertAudio(audioUrl, fadeTime = 1000) {
     console.log('Inserindo áudio:', audioUrl);
     
-    if (!this.audioElement) return;
+    if (!this.audioElement) {
+      console.error('Elemento de áudio não encontrado');
+      return;
+    }
+
+    // Valida se a URL é válida
+    if (!audioUrl || typeof audioUrl !== 'string') {
+      console.error('URL de áudio inválida:', audioUrl);
+      return;
+    }
 
     const originalSrc = this.audioElement.src;
     const originalTime = this.audioElement.currentTime;
@@ -122,15 +136,24 @@ class RadioPlayerEngine {
       
       return this.audioElement.play();
     }).then(() => {
+      console.log('Áudio inserido tocando com sucesso');
+      
       // Quando terminar, volta ao original
-      this.audioElement.addEventListener('ended', () => {
+      const handleEnded = () => {
+        this.audioElement.removeEventListener('ended', handleEnded);
         this.audioElement.src = originalSrc;
         this.audioElement.currentTime = originalTime;
-        this.audioElement.play();
-        this.fadeIn(fadeTime);
-      }, { once: true });
+        this.audioElement.play().then(() => {
+          this.fadeIn(fadeTime);
+        });
+      };
+      
+      this.audioElement.addEventListener('ended', handleEnded);
     }).catch(e => {
       console.error('Erro na inserção de áudio:', e);
+      // Em caso de erro, volta ao estado anterior
+      this.audioElement.src = originalSrc;
+      this.audioElement.currentTime = originalTime;
     });
   }
 
@@ -210,12 +233,20 @@ if (typeof window !== 'undefined') {
     }
   };
 
-  // Para debug
+  // Para debug - URLs de teste que funcionam
   window.testRadio = () => {
     console.log('Testando player...');
     window.updateRadioTrack('Música de Teste');
     setTimeout(() => {
-      window.insertRadioAudio('https://www.soundjay.com/misc/sounds/bell-ringing-05.wav');
+      // URL de teste que funciona
+      window.insertRadioAudio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3');
     }, 3000);
+  };
+
+  // URLs de teste adicionais
+  window.testUrls = {
+    song1: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    song2: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    song3: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
   };
 }
