@@ -28,7 +28,7 @@ const Login = () => {
       
       if (result.success) {
         toast.success("Login realizado com sucesso!");
-        navigate("/painel");
+        navigate("/player");
       } else {
         toast.error(result.error || "Erro ao fazer login");
       }
