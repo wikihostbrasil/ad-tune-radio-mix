@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,15 +18,15 @@ export const PlayerDashboard = () => {
   const [activeTab, setActiveTab] = useState("playlists");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedColor, setSelectedColor] = useState("blue");
-  const [isContentVisible, setIsContentVisible] = useState(true);
+  const [isContentVisible, setIsContentVisible] = useState(false); // Começa invisível
 
-  // Transição suave para mudança de abas - inicia invisível e depois aparece
+  // Transição suave para mudança de abas - aumentada duração e delay
   useEffect(() => {
     if (activeTab) {
-      setIsContentVisible(false); // Começa invisível
+      setIsContentVisible(false); // Fica invisível primeiro
       const timer = setTimeout(() => {
-        setIsContentVisible(true); // Aparece com transição
-      }, 100);
+        setIsContentVisible(true); // Aparece com transição mais lenta
+      }, 300); // Aumentado delay para tornar mais perceptível
 
       return () => clearTimeout(timer);
     }
@@ -155,8 +154,8 @@ export const PlayerDashboard = () => {
                 })}
               </div>
 
-              {/* Main Content com transição de opacidade suave */}
-              <div className={`transition-opacity duration-300 ease-in-out ${
+              {/* Main Content com transição de opacidade mais lenta e perceptível */}
+              <div className={`transition-opacity duration-500 ease-in-out ${
                 isContentVisible ? 'opacity-100' : 'opacity-0'
               }`}>
                 {renderContent()}

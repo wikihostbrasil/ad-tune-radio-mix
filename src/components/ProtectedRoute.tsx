@@ -1,6 +1,7 @@
 
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useEffect } from 'react';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -8,7 +9,18 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
-  const { user, loading } = useAuth();
+  const { user, loading, checkAuth } = useAuth();
+
+  // Revalida autenticação periodicamente para detectar alterações no devtools
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (user) {
+        checkAuth(); // Revalida com o backend
+      }
+    }, 30000); // Verifica a cada 30 segundos
+
+    return () => clearInterval(interval);
+  }, [user, checkAuth]);
 
   if (loading) {
     return (

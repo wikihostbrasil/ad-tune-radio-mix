@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,8 +27,8 @@ const Login = () => {
       
       if (result.success) {
         toast.success("Login realizado com sucesso!");
-        // Redireciona para /player após login bem-sucedido
-        navigate("/player", { replace: true });
+        // Redireciona para / que mostrará o splash screen e depois irá para /player
+        navigate("/", { replace: true });
       } else {
         // Mensagens de fallback personalizadas
         const errorMessage = result.error || "Email ou senha inválidos";
