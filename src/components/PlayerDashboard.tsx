@@ -1,10 +1,10 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RadioIcon, Music, Settings, BarChart3, Calendar, Disc3, Mic, MessageSquare } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { VinhettasManager } from "@/components/VinhettasManager";
 import { AnnouncementsManager } from "@/components/AnnouncementsManager";
 import { PromotionsManager } from "@/components/PromotionsManager";
@@ -19,20 +19,6 @@ export const PlayerDashboard = () => {
   const [activeTab, setActiveTab] = useState("playlists");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedColor, setSelectedColor] = useState("blue");
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  // Transição suave para mudança de abas - sem piscar
-  useEffect(() => {
-    if (activeTab) {
-      setIsTransitioning(true); // Inicia transição
-
-      const timer = setTimeout(() => {
-        setIsTransitioning(false); // Finaliza transição após delay
-      }, 300); // Tempo da transição
-
-      return () => clearTimeout(timer);
-    }
-  }, [activeTab]);
 
   const colorThemes = {
     blue: {
@@ -71,8 +57,8 @@ export const PlayerDashboard = () => {
     { id: "configuracoes", label: "Configurações", icon: Settings },
   ];
 
-  const renderContent = () => {
-    switch (activeTab) {
+  const renderContent = (tabId: string) => {
+    switch (tabId) {
       case "playlists":
         return <PlaylistsManager />;
       case "vinhetas":
@@ -156,16 +142,21 @@ export const PlayerDashboard = () => {
                 })}
               </div>
 
-              {/* Main Content com transição suave sem piscar */}
-              <div 
-                className={`transition-all duration-300 ease-in-out ${
-                  isTransitioning 
-                    ? 'opacity-0 transform translate-y-1' 
-                    : 'opacity-100 transform translate-y-0'
-                }`}
-              >
-                {renderContent()}
-              </div>
+              {/* Main Content com framer-motion */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ 
+                    duration: 0.3,
+                    ease: "easeInOut"
+                  }}
+                >
+                  {renderContent(activeTab)}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </div>
         </ScrollArea>

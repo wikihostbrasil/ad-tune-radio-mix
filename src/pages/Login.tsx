@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,10 +8,12 @@ import { RadioIcon, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { SplashScreen } from "@/components/SplashScreen";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSplash, setShowSplash] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -27,8 +30,8 @@ const Login = () => {
       
       if (result.success) {
         toast.success("Login realizado com sucesso!");
-        // Redireciona para / que mostrará o splash screen e depois irá para /player
-        navigate("/", { replace: true });
+        // Mostra o splash screen após login bem-sucedido
+        setShowSplash(true);
       } else {
         // Mensagens de fallback personalizadas
         const errorMessage = result.error || "Email ou senha inválidos";
@@ -40,6 +43,11 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+
+  // Se deve mostrar splash, renderiza apenas o splash
+  if (showSplash) {
+    return <SplashScreen onComplete={() => navigate("/player", { replace: true })} />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 flex items-center justify-center p-4">

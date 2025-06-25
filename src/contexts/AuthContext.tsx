@@ -2,15 +2,22 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+interface UserPreferences {
+  theme: string;
+  lang: string;
+}
+
 interface User {
   id: string;
   email: string;
   role: 'admin' | 'user';
-  name?: string;
+  nome?: string;
+  avatar?: string;
 }
 
 interface AuthContextType {
   user: User | null;
+  preferences: UserPreferences | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (email: string, password: string, name?: string) => Promise<{ success: boolean; error?: string }>;
@@ -36,6 +43,7 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -48,16 +56,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (response.ok) {
         const data = await response.json();
         if (data.status === 'success' && data.data) {
-          setUser(data.data);
+          setUser(data.data.user);
+          setPreferences(data.data.preferences || null);
         } else {
           setUser(null);
+          setPreferences(null);
         }
       } else {
         setUser(null);
+        setPreferences(null);
       }
     } catch (error) {
       console.error('Erro ao verificar autenticação:', error);
       setUser(null);
+      setPreferences(null);
     } finally {
       setLoading(false);
     }
@@ -77,8 +89,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const data = await response.json();
 
       if (response.ok && data.status === 'success') {
-        // Atualiza o estado do usuário imediatamente
-        setUser(data.data);
+        // Atualiza o estado do usuário e preferências imediatamente
+        setUser(data.data.user || data.data);
+        setPreferences(data.data.preferences || null);
         return { success: true };
       } else {
         return { success: false, error: data.message || 'Email ou senha inválidos' };
@@ -182,6 +195,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const value = {
     user,
+    preferences,
     loading,
     login,
     register,
