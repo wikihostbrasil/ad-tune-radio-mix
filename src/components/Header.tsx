@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { RadioIcon, User, Settings, Lock, LogOut, Sun, Moon, Code, ArrowUp, Bell, Palette } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -91,7 +90,7 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
               />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-foreground">Rádio Mix FM</h1>
+              <h1 className="text-lg font-bold text-foreground">{user?.nome || 'Rádio Mix FM'}</h1>
             </div>
           </div>
 
