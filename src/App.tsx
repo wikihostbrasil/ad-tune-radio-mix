@@ -16,9 +16,18 @@ import PlayerSignUp from "./player/pages/SignUp";
 import PlayerForgotPassword from "./player/pages/ForgotPassword";
 import Painel from "./pages/Painel"; // Mantém o player original
 
+// Radio pages (nova área)
+import RadioLogin from "./radio/pages/Login";
+import RadioSignUp from "./radio/pages/SignUp";
+import RadioForgotPassword from "./radio/pages/ForgotPassword";
+import RadioDashboard from "./radio/pages/Dashboard";
+
 // Painel pages
 import PainelLogin from "./painel/pages/Login";
 import PainelDashboard from "./painel/pages/Dashboard";
+
+// Downloads pages
+import DownloadsPage from "./downloads/pages/Downloads";
 
 // Shared pages
 import Stream from "./pages/Stream";
@@ -35,7 +44,7 @@ const AppContent = () => {
       <Route path="/" element={<Landing />} />
       <Route path="/site" element={<Landing />} />
       
-      {/* Player routes */}
+      {/* Player routes (tradicional) */}
       <Route path="/player/login" element={<PlayerLogin />} />
       <Route path="/player/criar-conta" element={<PlayerSignUp />} />
       <Route path="/player/recuperar-senha" element={<PlayerForgotPassword />} />
@@ -44,12 +53,29 @@ const AppContent = () => {
           <Painel />
         </ProtectedRoute>
       } />
+
+      {/* Radio routes (com sidebar) */}
+      <Route path="/radio/login" element={<RadioLogin />} />
+      <Route path="/radio/criar-conta" element={<RadioSignUp />} />
+      <Route path="/radio/recuperar-senha" element={<RadioForgotPassword />} />
+      <Route path="/radio" element={
+        <ProtectedRoute>
+          <RadioDashboard />
+        </ProtectedRoute>
+      } />
       
-      {/* Painel routes */}
+      {/* Painel routes (administrativo) */}
       <Route path="/painel/login" element={<PainelLogin />} />
       <Route path="/painel" element={
         <ProtectedRoute>
           <PainelDashboard />
+        </ProtectedRoute>
+      } />
+
+      {/* Downloads routes */}
+      <Route path="/downloads" element={
+        <ProtectedRoute>
+          <DownloadsPage />
         </ProtectedRoute>
       } />
       
