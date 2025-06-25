@@ -15,9 +15,15 @@ export const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) 
   useEffect(() => {
     const interval = setInterval(() => {
       if (user) {
-        checkAuth(); // Revalida com o backend
+        // Só revalida se o usuário ainda estiver ativo na página
+        if (document.visibilityState === 'visible') {
+          checkAuth().catch((error) => {
+            // Se houver erro na verificação, não force logout imediatamente
+            console.log('Erro na revalidação automática:', error);
+          });
+        }
       }
-    }, 30000); // Verifica a cada 30 segundos
+    }, 60000); // Aumentado para 60 segundos para ser menos agressivo
 
     return () => clearInterval(interval);
   }, [user, checkAuth]);

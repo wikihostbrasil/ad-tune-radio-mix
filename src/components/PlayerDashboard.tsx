@@ -18,15 +18,21 @@ export const PlayerDashboard = () => {
   const [activeTab, setActiveTab] = useState("playlists");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedColor, setSelectedColor] = useState("blue");
-  const [isContentVisible, setIsContentVisible] = useState(false); // Começa invisível
+  const [isContentVisible, setIsContentVisible] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Transição suave para mudança de abas - aumentada duração e delay
+  // Transição suave para mudança de abas - começa invisível e transiciona
   useEffect(() => {
     if (activeTab) {
-      setIsContentVisible(false); // Fica invisível primeiro
+      setIsTransitioning(true);
+      setIsContentVisible(false); // Torna invisível primeiro
+      
       const timer = setTimeout(() => {
-        setIsContentVisible(true); // Aparece com transição mais lenta
-      }, 300); // Aumentado delay para tornar mais perceptível
+        setIsContentVisible(true); // Aparece com transição
+        setTimeout(() => {
+          setIsTransitioning(false); // Finaliza transição
+        }, 500);
+      }, 50); // Pequeno delay para garantir que a transição seja visível
 
       return () => clearTimeout(timer);
     }
@@ -154,11 +160,12 @@ export const PlayerDashboard = () => {
                 })}
               </div>
 
-              {/* Main Content com transição de opacidade mais lenta e perceptível */}
-              <div className={`transition-opacity duration-500 ease-in-out ${
-                isContentVisible ? 'opacity-100' : 'opacity-0'
+              {/* Main Content com transição melhorada - invisível durante mudança */}
+              <div className={`transition-all duration-500 ease-in-out ${
+                isContentVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-2'
               }`}>
-                {renderContent()}
+                {/* Só renderiza o conteúdo quando não está em transição ou quando está visível */}
+                {(!isTransitioning || isContentVisible) && renderContent()}
               </div>
             </div>
           </div>
