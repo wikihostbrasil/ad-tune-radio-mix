@@ -95,7 +95,7 @@ export const PlayerDashboard = () => {
       case "especiais":
       case "spots":
       case "avisos":
-        return <PromotionsManager type={activeTab} />;
+        return <PromotionsManager />;
       case "reports":
         return (
           <Card>

@@ -34,7 +34,8 @@ import { PromotionsManager } from "./PromotionsManager";
 import { useAuth } from "@/contexts/AuthContext";
 
 const AppSidebar = ({ activeTab, setActiveTab }: { activeTab: string; setActiveTab: (tab: string) => void }) => {
-  const { collapsed } = useSidebar();
+  const { state } = useSidebar();
+  const collapsed = state === "collapsed";
 
   const tabs = [
     { 
@@ -94,11 +95,11 @@ const AppSidebar = ({ activeTab, setActiveTab }: { activeTab: string; setActiveT
   ];
 
   return (
-    <Sidebar className={collapsed ? "w-14" : "w-60"} collapsible>
+    <Sidebar className={collapsed ? "w-14" : "w-60"} collapsible="icon">
       <SidebarTrigger className="m-2 self-end" />
       
       <SidebarContent>
-        <SidebarGroup defaultOpen>
+        <SidebarGroup>
           <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -141,7 +142,7 @@ export const PlayerDashboard = () => {
       case "especiais":
       case "spots":
       case "avisos":
-        return <PromotionsManager type={activeTab} />;
+        return <PromotionsManager />;
       case "reports":
         return (
           <Card>
@@ -161,7 +162,7 @@ export const PlayerDashboard = () => {
   };
 
   return (
-    <SidebarProvider collapsedWidth={56}>
+    <SidebarProvider>
       {/* Header with trigger always visible */}
       <header className="fixed top-16 left-0 right-0 z-40 h-12 flex items-center border-b bg-background/95 backdrop-blur">
         <SidebarTrigger className="ml-4" />
