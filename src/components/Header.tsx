@@ -153,7 +153,7 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src="https://placehold.co/40x40/666666/FFFFFF?text=U" alt="User" />
+                    <AvatarImage src={user?.avatar || "https://placehold.co/40x40/666666/FFFFFF?text=U"} alt="User" />
                     <AvatarFallback className="bg-blue-500 text-white">
                       <User className="w-5 h-5" />
                     </AvatarFallback>
@@ -163,7 +163,7 @@ export const Header = ({ selectedColor, setSelectedColor }: HeaderProps) => {
               <DropdownMenuContent className="w-56 bg-popover" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user?.name || 'Usuário'}</p>
+                    <p className="text-sm font-medium leading-none">{user?.nome || 'Usuário'}</p>
                     <p className="text-xs leading-none text-muted-foreground">
                       {user?.email}
                     </p>
