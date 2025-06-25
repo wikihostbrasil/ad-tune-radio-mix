@@ -52,7 +52,7 @@ export const Player = () => {
     setIsPlaying(!isPlaying);
     
     // Chama função do script externo se existir
-    if (window.radioPlayer) {
+    if (typeof window !== 'undefined' && window.radioPlayer) {
       window.radioPlayer.togglePlay();
     }
   };
