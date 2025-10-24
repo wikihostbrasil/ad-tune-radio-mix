@@ -172,8 +172,7 @@
         .custom-select-search input:focus {
             outline: none;
             border-color: #3b82f6;
-            ring: 2px;
-            ring-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
         }
 
         .custom-select-options {
@@ -907,13 +906,13 @@
             const customSelects = document.querySelectorAll('.custom-select');
             
             customSelects.forEach(select => {
-                if ((select as any).dataset && (select as any).dataset.initialized === 'true') return;
-                if ((select as any).dataset) (select as any).dataset.initialized = 'true';
+                if (select.dataset && select.dataset.initialized === 'true') return;
+                if (select.dataset) select.dataset.initialized = 'true';
 
-                const trigger = select.querySelector('.custom-select-trigger') as HTMLElement | null;
-                const dropdown = select.querySelector('.custom-select-dropdown') as HTMLElement | null;
-                const searchInput = select.querySelector('.custom-select-search-input') as HTMLInputElement | null;
-                const options = select.querySelectorAll<HTMLElement>('.custom-select-option');
+                const trigger = select.querySelector('.custom-select-trigger');
+                const dropdown = select.querySelector('.custom-select-dropdown');
+                const searchInput = select.querySelector('.custom-select-search-input');
+                const options = select.querySelectorAll('.custom-select-option');
 
                 if (!trigger || !dropdown || !searchInput || !options.length) return;
                 
@@ -934,7 +933,7 @@
 
                 // Search functionality
                 searchInput.addEventListener('input', (e) => {
-                    const searchTerm = (e.target as HTMLInputElement).value.toLowerCase();
+                    const searchTerm = e.target.value.toLowerCase();
                     options.forEach(option => {
                         const text = option.textContent?.toLowerCase() || '';
                         if (text.includes(searchTerm)) option.classList.remove('hidden');
@@ -977,8 +976,8 @@
         });
 
         // Make functions global so onclick can access them
-        (window as any).openDrawer = openDrawer;
-        (window as any).closeDrawer = closeDrawer;
+        window.openDrawer = openDrawer;
+        window.closeDrawer = closeDrawer;
     </script>
 </body>
 </html>
