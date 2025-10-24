@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rádio Mix FM - Stream Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom slider styles */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-track {
+            background: rgba(255, 255, 255, 0.2);
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            background: white;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            margin-top: -4px;
+        }
+
+        input[type="range"]::-moz-range-track {
+            background: rgba(255, 255, 255, 0.2);
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            background: white;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            border: none;
+        }
+
+        .progress-track {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            transition: width 1s linear;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 min-h-screen text-white">
+    
+    <!-- Background Logo (Blurred) -->
+    <div class="absolute inset-0 flex items-center justify-center opacity-10">
+        <div class="w-96 h-96 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center blur-3xl">
+            <img 
+                src="https://placehold.co/200x200/0066FF/FFFFFF?text=LOGO" 
+                alt="Background Logo" 
+                class="w-48 h-48 object-contain opacity-50"
+            />
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="relative z-10 flex flex-col items-center justify-center min-h-screen p-8 pb-32">
+        <!-- Logo -->
+        <div class="mb-8 flex flex-col items-center">
+            <div class="w-40 h-40 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center mb-6 shadow-2xl overflow-hidden">
+                <img 
+                    id="mainLogo"
+                    src="https://placehold.co/160x160/0066FF/FFFFFF?text=LOGO" 
+                    alt="Logo" 
+                    class="w-32 h-32 object-contain rounded-full"
+                />
+            </div>
+            <h1 class="text-4xl font-bold text-center text-white mb-2">Rádio Mix FM</h1>
+            <p class="text-center text-gray-400">
+                Transmitindo ao vivo 24/7
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer Player -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 text-white border-t border-gray-700" style="background-color: #282E32;">
+        <div class="flex items-center h-20 px-4">
+            
+            <!-- Left - Track Info -->
+            <div class="flex items-center space-x-3 min-w-0 w-1/4">
+                <div class="w-14 h-14 bg-gray-700 rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <img 
+                        src="https://placehold.co/56x56/333/FFF?text=♪" 
+                        alt="Album Cover" 
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="text-sm font-medium text-white truncate" id="trackTitle">Rock Clássico Mix</p>
+                    <p class="text-xs text-gray-400 truncate" id="trackArtist">Tocando agora na Rádio Mix FM</p>
+                </div>
+                <button 
+                    id="likeBtn"
+                    class="text-gray-400 hover:text-white transition-all duration-200 hover:scale-110 p-2"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Center - Player Controls -->
+            <div class="flex flex-col items-center w-1/2">
+                <div class="flex items-center space-x-4 mb-2">
+                    <button class="text-gray-400 hover:text-white transition-all duration-200 hover:scale-110 p-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                    </button>
+                    <button class="text-gray-400 hover:text-white transition-all duration-200 hover:scale-110 p-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.333 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"></path>
+                        </svg>
+                    </button>
+                    <button 
+                        id="playPauseBtn"
+                        class="w-8 h-8 rounded-full bg-white hover:bg-gray-100 text-black transition-all duration-200 hover:scale-105 flex items-center justify-center"
+                    >
+                        <svg class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"></path>
+                        </svg>
+                    </button>
+                    <button class="text-gray-400 hover:text-white transition-all duration-200 hover:scale-110 p-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z"></path>
+                        </svg>
+                    </button>
+                    <button class="text-gray-400 hover:text-white transition-all duration-200 hover:scale-110 p-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Progress Bar with Time -->
+                <div class="flex items-center space-x-2 w-full max-w-md">
+                    <span class="text-xs text-gray-400 w-10 text-right" id="currentTime">2:15</span>
+                    <div class="flex-1 h-1 progress-track">
+                        <div class="progress-fill" id="progressFill" style="width: 45%"></div>
+                    </div>
+                    <span class="text-xs text-gray-400 w-10" id="duration">4:32</span>
+                </div>
+            </div>
+
+            <!-- Right - Volume Control -->
+            <div class="flex items-center space-x-3 w-1/4 justify-end">
+                <button class="text-gray-400 hover:text-white p-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                    </svg>
+                </button>
+                <input 
+                    type="range" 
+                    id="volumeSlider"
+                    min="0" 
+                    max="100" 
+                    value="80" 
+                    class="w-24"
+                />
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let isPlaying = false;
+        let isLiked = false;
+        let progress = 45;
+        let volume = 80;
+
+        // Elements
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const likeBtn = document.getElementById('likeBtn');
+        const progressFill = document.getElementById('progressFill');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        // Play/Pause functionality
+        playPauseBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            
+            if (isPlaying) {
+                playPauseBtn.innerHTML = `
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"></path>
+                    </svg>
+                `;
+            } else {
+                playPauseBtn.innerHTML = `
+                    <svg class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"></path>
+                    </svg>
+                `;
+            }
+        });
+
+        // Like functionality
+        likeBtn.addEventListener('click', () => {
+            isLiked = !isLiked;
+            
+            if (isLiked) {
+                likeBtn.classList.add('text-green-500');
+                likeBtn.classList.remove('text-gray-400');
+                likeBtn.innerHTML = `
+                    <svg class="w-4 h-4" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                `;
+            } else {
+                likeBtn.classList.remove('text-green-500');
+                likeBtn.classList.add('text-gray-400');
+                likeBtn.innerHTML = `
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                `;
+            }
+        });
+
+        // Progress simulation
+        setInterval(() => {
+            if (isPlaying) {
+                progress += 1;
+                if (progress >= 100) {
+                    progress = 0;
+                }
+                progressFill.style.width = progress + '%';
+            }
+        }, 1000);
+
+        // Volume control
+        volumeSlider.addEventListener('input', (e) => {
+            volume = e.target.value;
+        });
+    </script>
+</body>
+</html>
