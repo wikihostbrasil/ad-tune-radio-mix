@@ -855,6 +855,11 @@
                 menuToggle.click();
             }
 
+            // Ensure custom selects are initialized
+            if (typeof initCustomSelects === 'function') {
+                initCustomSelects();
+            }
+
             // Close any open drawer
             if (currentDrawer) {
                 closeDrawer(currentDrawer);
@@ -865,10 +870,12 @@
             if (drawer) {
                 footerPlayer.classList.add('hidden');
                 drawer.classList.remove('translate-y-full');
-                drawerOverlay.classList.remove('hidden');
-                setTimeout(() => {
+                // Show overlay
+                drawerOverlay.classList.remove('hidden', 'opacity-0');
+                // Small delay to allow transition
+                requestAnimationFrame(() => {
                     drawerOverlay.classList.add('opacity-100');
-                }, 10);
+                });
                 currentDrawer = type;
             }
         }
@@ -878,7 +885,9 @@
             if (drawer) {
                 drawer.classList.add('translate-y-full');
                 footerPlayer.classList.remove('hidden');
+                // Hide overlay with fade
                 drawerOverlay.classList.remove('opacity-100');
+                drawerOverlay.classList.add('opacity-0');
                 setTimeout(() => {
                     drawerOverlay.classList.add('hidden');
                 }, 300);
@@ -894,81 +903,82 @@
         });
 
         // Custom Select functionality
-        const customSelects = document.querySelectorAll('.custom-select');
-        
-        customSelects.forEach(select => {
-            const trigger = select.querySelector('.custom-select-trigger');
-            const dropdown = select.querySelector('.custom-select-dropdown');
-            const searchInput = select.querySelector('.custom-select-search-input');
-            const options = select.querySelectorAll('.custom-select-option');
+        function initCustomSelects() {
+            const customSelects = document.querySelectorAll('.custom-select');
             
-            // Toggle dropdown
-            trigger.addEventListener('click', (e) => {
-                e.stopPropagation();
+            customSelects.forEach(select => {
+                if ((select as any).dataset && (select as any).dataset.initialized === 'true') return;
+                if ((select as any).dataset) (select as any).dataset.initialized = 'true';
+
+                const trigger = select.querySelector('.custom-select-trigger') as HTMLElement | null;
+                const dropdown = select.querySelector('.custom-select-dropdown') as HTMLElement | null;
+                const searchInput = select.querySelector('.custom-select-search-input') as HTMLInputElement | null;
+                const options = select.querySelectorAll<HTMLElement>('.custom-select-option');
+
+                if (!trigger || !dropdown || !searchInput || !options.length) return;
                 
-                // Close other selects
-                customSelects.forEach(s => {
-                    if (s !== select) {
-                        s.classList.remove('active');
+                // Toggle dropdown
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+
+                    // Close other selects
+                    document.querySelectorAll('.custom-select.active').forEach(s => {
+                        if (s !== select) s.classList.remove('active');
+                    });
+
+                    select.classList.toggle('active');
+                    if (select.classList.contains('active')) {
+                        searchInput.focus();
                     }
                 });
-                
-                select.classList.toggle('active');
-                
-                if (select.classList.contains('active')) {
-                    searchInput.focus();
-                }
-            });
-            
-            // Search functionality
-            searchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                
+
+                // Search functionality
+                searchInput.addEventListener('input', (e) => {
+                    const searchTerm = (e.target as HTMLInputElement).value.toLowerCase();
+                    options.forEach(option => {
+                        const text = option.textContent?.toLowerCase() || '';
+                        if (text.includes(searchTerm)) option.classList.remove('hidden');
+                        else option.classList.add('hidden');
+                    });
+                });
+
+                // Select option
                 options.forEach(option => {
-                    const text = option.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        option.classList.remove('hidden');
-                    } else {
-                        option.classList.add('hidden');
-                    }
+                    option.addEventListener('click', () => {
+                        // Update trigger text
+                        trigger.textContent = option.textContent || '';
+
+                        // Mark as selected
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+
+                        // Close dropdown
+                        select.classList.remove('active');
+
+                        // Reset search
+                        searchInput.value = '';
+                        options.forEach(opt => opt.classList.remove('hidden'));
+                    });
+                });
+
+                // Prevent dropdown from closing when clicking inside
+                dropdown.addEventListener('click', (e) => {
+                    e.stopPropagation();
                 });
             });
-            
-            // Select option
-            options.forEach(option => {
-                option.addEventListener('click', () => {
-                    // Update trigger text
-                    trigger.textContent = option.textContent;
-                    
-                    // Mark as selected
-                    options.forEach(opt => opt.classList.remove('selected'));
-                    option.classList.add('selected');
-                    
-                    // Close dropdown
-                    select.classList.remove('active');
-                    
-                    // Reset search
-                    searchInput.value = '';
-                    options.forEach(opt => opt.classList.remove('hidden'));
-                });
-            });
-            
-            // Prevent dropdown from closing when clicking inside
-            dropdown.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
-        });
-        
+        }
+
+        // Init on load and when drawers open
+        initCustomSelects();
+
         // Close custom selects when clicking outside
         document.addEventListener('click', () => {
-            customSelects.forEach(select => {
-                select.classList.remove('active');
-            });
+            document.querySelectorAll('.custom-select.active').forEach(s => s.classList.remove('active'));
         });
 
         // Make functions global so onclick can access them
-        window.openDrawer = openDrawer;
-        window.closeDrawer = closeDrawer;
+        (window as any).openDrawer = openDrawer;
+        (window as any).closeDrawer = closeDrawer;
     </script>
 </body>
 </html>
