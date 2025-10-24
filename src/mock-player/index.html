@@ -59,9 +59,13 @@
 
         .progress-fill {
             height: 100%;
-            background: white;
+            background: #1f2937;
             border-radius: 2px;
             transition: width 1s linear;
+        }
+
+        .dark .progress-fill {
+            background: white;
         }
 
         @keyframes pulse {
@@ -78,7 +82,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 bg-white min-h-screen text-gray-900 dark:text-white transition-colors duration-300">
+<body class="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 min-h-screen text-gray-900 dark:text-white transition-colors duration-300">
     
     <!-- Theme Toggle Button -->
     <button 
