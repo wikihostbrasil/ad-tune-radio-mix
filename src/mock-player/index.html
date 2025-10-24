@@ -80,6 +80,134 @@
         .animate-pulse {
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
+
+        /* Custom Select with Search */
+        .custom-select {
+            position: relative;
+        }
+
+        .custom-select-trigger {
+            width: 100%;
+            padding: 0.5rem 2.5rem 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dark .custom-select-trigger {
+            background: #374151;
+            border-color: #4b5563;
+            color: white;
+        }
+
+        .custom-select-trigger:hover {
+            border-color: #9ca3af;
+        }
+
+        .custom-select-trigger::after {
+            content: '▼';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            transition: transform 0.2s;
+        }
+
+        .custom-select.active .custom-select-trigger::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .custom-select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 0.25rem;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            max-height: 300px;
+            overflow: hidden;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .custom-select-dropdown {
+            background: #374151;
+            border-color: #4b5563;
+        }
+
+        .custom-select.active .custom-select-dropdown {
+            display: block;
+        }
+
+        .custom-select-search {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .dark .custom-select-search {
+            border-color: #4b5563;
+        }
+
+        .custom-select-search input {
+            width: 100%;
+            padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            background: white;
+        }
+
+        .dark .custom-select-search input {
+            background: #1f2937;
+            border-color: #4b5563;
+            color: white;
+        }
+
+        .custom-select-search input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            ring: 2px;
+            ring-color: #3b82f6;
+        }
+
+        .custom-select-options {
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .custom-select-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .custom-select-option:hover {
+            background: #f3f4f6;
+        }
+
+        .dark .custom-select-option:hover {
+            background: #4b5563;
+        }
+
+        .custom-select-option.selected {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .dark .custom-select-option.selected {
+            background: #1e3a8a;
+            color: #93c5fd;
+        }
+
+        .custom-select-option.hidden {
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 min-h-screen text-gray-900 dark:text-white transition-colors duration-300">
@@ -112,6 +240,9 @@
 
     <!-- Sidebar Overlay -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-30 hidden opacity-0 transition-opacity duration-300"></div>
+
+    <!-- Drawer Overlay -->
+    <div id="drawerOverlay" class="fixed inset-0 bg-black/60 z-40 hidden opacity-0 transition-opacity duration-300"></div>
 
     <!-- Sidebar -->
     <div id="sidebar" class="fixed top-0 right-0 h-full w-80 bg-white dark:bg-gray-800 shadow-2xl transform translate-x-full transition-transform duration-300 z-40 overflow-y-auto">
@@ -189,35 +320,69 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Início:</label>
-                    <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option>Atenção Colaborador</option>
-                        <option>Urgente</option>
-                        <option>Aviso</option>
-                    </select>
+                    <div class="custom-select" data-name="inicio">
+                        <div class="custom-select-trigger text-gray-900 dark:text-white">Selecione...</div>
+                        <div class="custom-select-dropdown">
+                            <div class="custom-select-search">
+                                <input type="text" placeholder="🔍 Buscar..." class="custom-select-search-input">
+                            </div>
+                            <div class="custom-select-options text-gray-900 dark:text-white">
+                                <div class="custom-select-option" data-value="atencao">Atenção Colaborador</div>
+                                <div class="custom-select-option" data-value="urgente">Urgente</div>
+                                <div class="custom-select-option" data-value="aviso">Aviso</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nome:</label>
-                    <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option>Teste 01</option>
-                        <option>João Silva</option>
-                        <option>Maria Santos</option>
-                    </select>
+                    <div class="custom-select" data-name="nome">
+                        <div class="custom-select-trigger text-gray-900 dark:text-white">Selecione...</div>
+                        <div class="custom-select-dropdown">
+                            <div class="custom-select-search">
+                                <input type="text" placeholder="🔍 Buscar nome..." class="custom-select-search-input">
+                            </div>
+                            <div class="custom-select-options text-gray-900 dark:text-white">
+                                <div class="custom-select-option" data-value="teste01">Teste 01</div>
+                                <div class="custom-select-option" data-value="joao">João Silva</div>
+                                <div class="custom-select-option" data-value="maria">Maria Santos</div>
+                                <div class="custom-select-option" data-value="pedro">Pedro Oliveira</div>
+                                <div class="custom-select-option" data-value="ana">Ana Costa</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Chamada:</label>
-                    <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option>Favor comparecer à área de atendimento ao cliente</option>
-                        <option>Dirija-se à recepção</option>
-                        <option>Compareça ao setor de RH</option>
-                    </select>
+                    <div class="custom-select" data-name="chamada">
+                        <div class="custom-select-trigger text-gray-900 dark:text-white">Selecione...</div>
+                        <div class="custom-select-dropdown">
+                            <div class="custom-select-search">
+                                <input type="text" placeholder="🔍 Buscar chamada..." class="custom-select-search-input">
+                            </div>
+                            <div class="custom-select-options text-gray-900 dark:text-white">
+                                <div class="custom-select-option" data-value="atendimento">Favor comparecer à área de atendimento ao cliente</div>
+                                <div class="custom-select-option" data-value="recepcao">Dirija-se à recepção</div>
+                                <div class="custom-select-option" data-value="rh">Compareça ao setor de RH</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Prioridade:</label>
-                    <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option>Normal</option>
-                        <option>Alta</option>
-                        <option>Urgente</option>
-                    </select>
+                    <div class="custom-select" data-name="prioridade">
+                        <div class="custom-select-trigger text-gray-900 dark:text-white">Selecione...</div>
+                        <div class="custom-select-dropdown">
+                            <div class="custom-select-search">
+                                <input type="text" placeholder="🔍 Buscar..." class="custom-select-search-input">
+                            </div>
+                            <div class="custom-select-options text-gray-900 dark:text-white">
+                                <div class="custom-select-option" data-value="normal">Normal</div>
+                                <div class="custom-select-option" data-value="alta">Alta</div>
+                                <div class="custom-select-option" data-value="urgente">Urgente</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="flex flex-wrap gap-3">
@@ -249,22 +414,41 @@
             <div class="flex flex-wrap items-end gap-4 mb-4">
                 <div class="flex-1 min-w-[200px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Modelo:</label>
-                    <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                        <option>Modelo...</option>
-                        <option>Carro</option>
-                        <option>Moto</option>
-                        <option>Caminhão</option>
-                    </select>
+                    <div class="custom-select" data-name="modelo">
+                        <div class="custom-select-trigger text-gray-900 dark:text-white">Modelo...</div>
+                        <div class="custom-select-dropdown">
+                            <div class="custom-select-search">
+                                <input type="text" placeholder="🔍 Buscar modelo..." class="custom-select-search-input">
+                            </div>
+                            <div class="custom-select-options text-gray-900 dark:text-white">
+                                <div class="custom-select-option" data-value="carro">Carro</div>
+                                <div class="custom-select-option" data-value="moto">Moto</div>
+                                <div class="custom-select-option" data-value="caminhao">Caminhão</div>
+                                <div class="custom-select-option" data-value="van">Van</div>
+                                <div class="custom-select-option" data-value="onibus">Ônibus</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex-1 min-w-[200px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cor:</label>
-                    <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                        <option>Cor...</option>
-                        <option>Branco</option>
-                        <option>Preto</option>
-                        <option>Prata</option>
-                        <option>Vermelho</option>
-                    </select>
+                    <div class="custom-select" data-name="cor">
+                        <div class="custom-select-trigger text-gray-900 dark:text-white">Cor...</div>
+                        <div class="custom-select-dropdown">
+                            <div class="custom-select-search">
+                                <input type="text" placeholder="🔍 Buscar cor..." class="custom-select-search-input">
+                            </div>
+                            <div class="custom-select-options text-gray-900 dark:text-white">
+                                <div class="custom-select-option" data-value="branco">Branco</div>
+                                <div class="custom-select-option" data-value="preto">Preto</div>
+                                <div class="custom-select-option" data-value="prata">Prata</div>
+                                <div class="custom-select-option" data-value="vermelho">Vermelho</div>
+                                <div class="custom-select-option" data-value="azul">Azul</div>
+                                <div class="custom-select-option" data-value="verde">Verde</div>
+                                <div class="custom-select-option" data-value="amarelo">Amarelo</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex-1 min-w-[200px]">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">PLACA:</label>
@@ -294,12 +478,21 @@
         </div>
         <div class="p-6">
             <div class="mb-4">
-                <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent mb-3">
-                    <option>Selecione um aviso...</option>
-                    <option>Promoção do dia</option>
-                    <option>Aviso de segurança</option>
-                    <option>Horário especial</option>
-                </select>
+                <div class="custom-select mb-3" data-name="aviso">
+                    <div class="custom-select-trigger text-gray-900 dark:text-white">Selecione um aviso...</div>
+                    <div class="custom-select-dropdown">
+                        <div class="custom-select-search">
+                            <input type="text" placeholder="🔍 Buscar aviso..." class="custom-select-search-input">
+                        </div>
+                        <div class="custom-select-options text-gray-900 dark:text-white">
+                            <div class="custom-select-option" data-value="promocao">Promoção do dia</div>
+                            <div class="custom-select-option" data-value="seguranca">Aviso de segurança</div>
+                            <div class="custom-select-option" data-value="horario">Horário especial</div>
+                            <div class="custom-select-option" data-value="manutencao">Manutenção programada</div>
+                            <div class="custom-select-option" data-value="evento">Evento especial</div>
+                        </div>
+                    </div>
+                </div>
                 <div class="flex flex-wrap gap-3">
                     <button class="px-6 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-100 transition-colors flex items-center space-x-2">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
@@ -316,11 +509,19 @@
             <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
                 <h4 class="font-semibold text-gray-800 dark:text-white mb-3">Programe seus anúncios gerais ou exclusivos a cada "x" músicas:</h4>
                 <div class="flex flex-wrap items-center gap-3 mb-3">
-                    <select class="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-                        <option>Selecione</option>
-                        <option>Anúncio 1</option>
-                        <option>Anúncio 2</option>
-                    </select>
+                    <div class="flex-1 min-w-[200px] custom-select" data-name="anuncio-programado">
+                        <div class="custom-select-trigger text-gray-900 dark:text-white">Selecione</div>
+                        <div class="custom-select-dropdown">
+                            <div class="custom-select-search">
+                                <input type="text" placeholder="🔍 Buscar anúncio..." class="custom-select-search-input">
+                            </div>
+                            <div class="custom-select-options text-gray-900 dark:text-white">
+                                <div class="custom-select-option" data-value="anuncio1">Anúncio 1</div>
+                                <div class="custom-select-option" data-value="anuncio2">Anúncio 2</div>
+                                <div class="custom-select-option" data-value="anuncio3">Anúncio 3</div>
+                            </div>
+                        </div>
+                    </div>
                     <span class="text-gray-700 dark:text-gray-300">A cada</span>
                     <input type="number" value="1" min="1" class="w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-center focus:ring-2 focus:ring-orange-500 focus:border-transparent">
                     <span class="text-gray-700 dark:text-gray-300">músicas</span>
@@ -646,6 +847,7 @@
         // Drawer functionality
         let currentDrawer = null;
         const footerPlayer = document.getElementById('footerPlayer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
 
         function openDrawer(type) {
             // Close sidebar first
@@ -663,6 +865,10 @@
             if (drawer) {
                 footerPlayer.classList.add('hidden');
                 drawer.classList.remove('translate-y-full');
+                drawerOverlay.classList.remove('hidden');
+                setTimeout(() => {
+                    drawerOverlay.classList.add('opacity-100');
+                }, 10);
                 currentDrawer = type;
             }
         }
@@ -672,9 +878,93 @@
             if (drawer) {
                 drawer.classList.add('translate-y-full');
                 footerPlayer.classList.remove('hidden');
+                drawerOverlay.classList.remove('opacity-100');
+                setTimeout(() => {
+                    drawerOverlay.classList.add('hidden');
+                }, 300);
                 currentDrawer = null;
             }
         }
+
+        // Click overlay to close drawer
+        drawerOverlay.addEventListener('click', () => {
+            if (currentDrawer) {
+                closeDrawer(currentDrawer);
+            }
+        });
+
+        // Custom Select functionality
+        const customSelects = document.querySelectorAll('.custom-select');
+        
+        customSelects.forEach(select => {
+            const trigger = select.querySelector('.custom-select-trigger');
+            const dropdown = select.querySelector('.custom-select-dropdown');
+            const searchInput = select.querySelector('.custom-select-search-input');
+            const options = select.querySelectorAll('.custom-select-option');
+            
+            // Toggle dropdown
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                // Close other selects
+                customSelects.forEach(s => {
+                    if (s !== select) {
+                        s.classList.remove('active');
+                    }
+                });
+                
+                select.classList.toggle('active');
+                
+                if (select.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                
+                options.forEach(option => {
+                    const text = option.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        option.classList.remove('hidden');
+                    } else {
+                        option.classList.add('hidden');
+                    }
+                });
+            });
+            
+            // Select option
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Update trigger text
+                    trigger.textContent = option.textContent;
+                    
+                    // Mark as selected
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    
+                    // Close dropdown
+                    select.classList.remove('active');
+                    
+                    // Reset search
+                    searchInput.value = '';
+                    options.forEach(opt => opt.classList.remove('hidden'));
+                });
+            });
+            
+            // Prevent dropdown from closing when clicking inside
+            dropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        });
+        
+        // Close custom selects when clicking outside
+        document.addEventListener('click', () => {
+            customSelects.forEach(select => {
+                select.classList.remove('active');
+            });
+        });
 
         // Make functions global so onclick can access them
         window.openDrawer = openDrawer;
